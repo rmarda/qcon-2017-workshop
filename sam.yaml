@@ -1,0 +1,213 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: "Pipeline Demo (Python)"
+
+Resources:
+
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          title:
+            Ref: AWS::StackName
+        basePath: "/prod"
+        schemes:
+        - "https"
+        paths:
+          /events:
+            post:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              parameters:
+              - in: "body"
+                name: "EventBodyModel"
+                required: true
+                schema:
+                  $ref: "#/definitions/EventBodyModel"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              # NB: Must send 'Content-type: application/json' header for validation
+              x-amazon-apigateway-request-validator: "ValidateBody"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EventsIngestLambda.Arn}/invocations"
+                # passthroughBehavior: "NEVER" # NB: This setting has no effect for type "aws_proxy"
+                httpMethod: "POST"
+                # contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+        definitions:
+          Empty:
+            type: "object"
+            title: "Empty Schema"
+          EventBodyModel:
+            type: "object"
+            properties:
+              timestamp:
+                type: "integer"
+              location_id:
+                type: "string"
+              location_name:
+                type: "string"
+              latitude:
+                type: "number"
+              longitude:
+                type: "number"
+              city:
+                type: "string"
+              state:
+                type: "string"
+              temperature:
+                type: "number"
+            required:
+            - timestamp
+            - location_id
+            - temperature
+        x-amazon-apigateway-request-validators:
+          ValidateBody:
+            validateRequestParameters: false
+            validateRequestBody: true
+#          /locations/{id}:
+#            get:
+#              produces:
+#              - "application/json"
+#              parameters:
+#              - name: "id"
+#                in: "path"
+#                required: true
+#                type: "string"
+#              responses:
+#                "200":
+#                  description: "200 response"
+#                  schema:
+#                    $ref: "#/definitions/Empty"
+#              x-amazon-apigateway-integration:
+#                responses:
+#                  default:
+#                    statusCode: "200"
+#                uri:
+#                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
+#                passthroughBehavior: "when_no_match"
+#                httpMethod: "POST"
+#                contentHandling: "CONVERT_TO_TEXT"
+#                type: "aws_proxy"
+
+  EventsIngestLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.EventsIngestLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 10
+      CodeUri: events-ingest-lambda/target/events-ingest-lambda-1.0-SNAPSHOT.jar
+      Policies:
+        - AmazonSNSFullAccess
+      Environment:
+        Variables:
+          EVENTS_TOPIC: !Ref EventsTopic
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /events
+            Method: POST
+
+  EventsTopic:
+    Type: AWS::SNS::Topic
+
+  LocationsPersistLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.LocationsPersistLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 300
+      CodeUri: locations-persist-lambda/target/locations-persist-lambda-1.0-SNAPSHOT.jar
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        EventsTopicAction:
+          Type: SNS
+          Properties:
+            Topic: !Ref EventsTopic
+
+#  LocationsQueryLambda:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      Handler: locations_query_lambda.handler
+#      Runtime: python2.7
+#      MemorySize: 128
+#      Timeout: 10
+#      CodeUri: locations_query_lambda.zip
+#      Policies:
+#        - AmazonDynamoDBFullAccess
+#      Environment:
+#        Variables:
+#          LOCATIONS_TABLE: !Ref LocationsTable
+#      Events:
+#        ApiEvents:
+#          Type: Api
+#          Properties:
+#            RestApiId: !Ref Api
+#            Path: /locations/{id}
+#            Method: GET
+
+  LocationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "location_id"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "location_id"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+#      StreamSpecification:
+#        StreamViewType: NEW_AND_OLD_IMAGES
+
+#  LocationsNotifyLambda:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      Handler: locations_notify_lambda.handler
+#      Runtime: python2.7
+#      MemorySize: 128
+#      Timeout: 10
+#      CodeUri: locations_notify_lambda.zip
+#      Environment:
+#        Variables:
+#          HIPCHAT_NOTIFY_URL: "https://symphonia.hipchat.com/v2/room/3754932/notification"
+#          HIPCHAT_TOKEN: "9bQ8oRaf29ExT2dS2Goey4dfPfL0bSKsggbysRXn"
+#      Events:
+#        EventsTableAction:
+#          Type: DynamoDB
+#          Properties:
+#            Stream: !GetAtt LocationsTable.StreamArn
+#            StartingPosition: LATEST
+#            BatchSize: 100
+
+Outputs:
+  ApiUrl:
+    Description: URL of your API endpoint
+    Value: !Join
+      - ''
+      - - https://
+        - !Ref Api
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com/prod'
