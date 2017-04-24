@@ -1,4 +1,4 @@
-# Symphonia Pipeline Demo
+# Symphonia / OSCON 2017 Tutorial
 
 ## Lifecycle
 
@@ -29,48 +29,6 @@ $ mvn package && ./bin/deploy.sh
 #### Tear down application and infrastructure
 
 ```bash
-$ aws cloudformation delete-stack --stack-name pipeline-demo
+$ aws cloudformation delete-stack --stack-name <stack name>
 
 ```
-
-## Architecture
-
-```text
-+---------------------------------------------+
-| API Gateway                                 |
-|  GET or POST -> https://.../prod/<any path> |
-+----------------------+----------------------+
-                       |
-                (HTTP request)
-                       |
-                       V
-+----------------------+----------------------------------+
-| Lambda (io.symphonia.LocationsPersistLambda::handler) |
-+----------------------+----------------------------------+
-                       |
-        (io.symphonia.domain.WeatherEvent)
-                       |
-                       V
-                  +----+----+
-                  | Kinesis |
-                  +----+----+
-                       |
-                       V
-+----------------------+-------------------------------+
-| Lambda (io.symphonia.PipelineKinesisLambda::handler) |
-+----------------------+-------------------------------+
-             |                              |
-  (request_id, lambda_id)              (lambda_id)
-             |                              |
-             V                              V
-+---------------------------+  +--------------------------+
-| DynamoDB 'requests' table |  | DynamoDB 'lambdas' table |
-+---------------------------+  +--------------------------+
-```
-
-## TODO
-
-1. Split out infrastructure into separate Cloudformation template
-1. Parameterize stack name in scripts
-1. Rename components?
-
