@@ -3,10 +3,15 @@
 set -e
 
 URL=$(aws cloudformation describe-stacks \
-    --query 'Stacks[?StackName==`pipeline-demo`].Outputs[0][?OutputKey==`ApiUrl`].OutputValue' \
+    --query 'Stacks[?StackName==`oscon-2017-tutorial`].Outputs[0][?OutputKey==`ApiUrl`].OutputValue' \
     --output text)
+
+URL=${URL}/events
 
 echo "Sending requests to '$URL'"
 
-grep '^.\{19\}$' /usr/share/dict/words \
-  | xargs -P 5 -I % sh -c "curl -s --data-raw % ${URL}; echo"
+curl -H "Content-type: application/json" \
+    -s --data-raw "{\"timestamp\": `date +%s`, \"locationId\": \"location001\", \"temperature\": 32.0, \"locationName\": \"New York City\", \"state\": \"NY\"}" \
+    ${URL}
+
+echo

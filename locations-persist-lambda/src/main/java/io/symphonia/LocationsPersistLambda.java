@@ -97,9 +97,9 @@ public class LocationsPersistLambda {
 
     private WriteRequest transform(WeatherEvent weatherEvent) {
         PutRequest putRequest = new PutRequest();
-        putRequest.addItemEntry("location_id", new AttributeValue(weatherEvent.getLocationId()));
+        putRequest.addItemEntry("locationId", new AttributeValue(weatherEvent.getLocationId()));
         if (weatherEvent.getLocationName() != null) {
-            putRequest.addItemEntry("location_name", new AttributeValue(weatherEvent.getLocationName()));
+            putRequest.addItemEntry("locationName", new AttributeValue(weatherEvent.getLocationName()));
         }
         if (weatherEvent.getLatitude() != null) {
             putRequest.addItemEntry("latitude", new AttributeValue().withN(weatherEvent.getLatitude().toString()));

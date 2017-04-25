@@ -46,6 +46,45 @@ Resources:
                 httpMethod: "POST"
                 # contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
+          /locations:
+            get:
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
+                httpMethod: "POST"
+                type: "aws_proxy"
+          /locations/{id}:
+            get:
+              produces:
+              - "application/json"
+              parameters:
+              - name: "id"
+                in: "path"
+                required: false
+                type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
+                httpMethod: "POST"
+                type: "aws_proxy"
         definitions:
           Empty:
             type: "object"
@@ -55,9 +94,9 @@ Resources:
             properties:
               timestamp:
                 type: "integer"
-              location_id:
+              locationId:
                 type: "string"
-              location_name:
+              locationName:
                 type: "string"
               latitude:
                 type: "number"
@@ -77,30 +116,6 @@ Resources:
           ValidateBody:
             validateRequestParameters: false
             validateRequestBody: true
-#          /locations/{id}:
-#            get:
-#              produces:
-#              - "application/json"
-#              parameters:
-#              - name: "id"
-#                in: "path"
-#                required: true
-#                type: "string"
-#              responses:
-#                "200":
-#                  description: "200 response"
-#                  schema:
-#                    $ref: "#/definitions/Empty"
-#              x-amazon-apigateway-integration:
-#                responses:
-#                  default:
-#                    statusCode: "200"
-#                uri:
-#                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
-#                passthroughBehavior: "when_no_match"
-#                httpMethod: "POST"
-#                contentHandling: "CONVERT_TO_TEXT"
-#                type: "aws_proxy"
 
   EventsIngestLambda:
     Type: AWS::Serverless::Function
@@ -145,41 +160,57 @@ Resources:
           Properties:
             Topic: !Ref EventsTopic
 
-#  LocationsQueryLambda:
-#    Type: AWS::Serverless::Function
-#    Properties:
-#      Handler: locations_query_lambda.handler
-#      Runtime: python2.7
-#      MemorySize: 128
-#      Timeout: 10
-#      CodeUri: locations_query_lambda.zip
-#      Policies:
-#        - AmazonDynamoDBFullAccess
-#      Environment:
-#        Variables:
-#          LOCATIONS_TABLE: !Ref LocationsTable
-#      Events:
-#        ApiEvents:
-#          Type: Api
-#          Properties:
-#            RestApiId: !Ref Api
-#            Path: /locations/{id}
-#            Method: GET
+  LocationsQueryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.LocationsQueryLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 300
+      CodeUri: locations-query-lambda/target/locations-query-lambda-1.0-SNAPSHOT.jar
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        QueryLocation:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /locations
+            Method: GET
+        GetLocation:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /locations/{id}
+            Method: GET
 
   LocationsTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: "location_id"
+        - AttributeName: "locationId"
+          AttributeType: "S"
+        - AttributeName: "state"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "location_id"
+        - AttributeName: "locationId"
           KeyType: "HASH"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-#      StreamSpecification:
-#        StreamViewType: NEW_AND_OLD_IMAGES
+      GlobalSecondaryIndexes:
+        - IndexName: "stateIndex"
+          KeySchema:
+            - AttributeName: "state"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
 
 #  LocationsNotifyLambda:
 #    Type: AWS::Serverless::Function

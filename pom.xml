@@ -23,6 +23,7 @@
         <module>shared-domain</module>
         <module>events-ingest-lambda</module>
         <module>locations-persist-lambda</module>
+        <module>locations-query-lambda</module>
     </modules>
 
     <dependencyManagement>
