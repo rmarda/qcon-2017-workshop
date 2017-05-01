@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: "Pipeline Demo (Python)"
+Description: "OSCON 2017 Tutorial"
 
 Resources:
 
@@ -42,9 +42,8 @@ Resources:
                     statusCode: "200"
                 uri:
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EventsIngestLambda.Arn}/invocations"
-                # passthroughBehavior: "NEVER" # NB: This setting has no effect for type "aws_proxy"
                 httpMethod: "POST"
-                # contentHandling: "CONVERT_TO_TEXT"
+                contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
           /locations:
             get:
@@ -62,6 +61,7 @@ Resources:
                 uri:
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
                 httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
           /locations/{id}:
             get:
@@ -84,6 +84,7 @@ Resources:
                 uri:
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
                 httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
         definitions:
           Empty:
@@ -127,6 +128,7 @@ Resources:
       CodeUri: events-ingest-lambda/target/events-ingest-lambda-1.0-SNAPSHOT.jar
       Policies:
         - AmazonSNSFullAccess
+        - AWSXrayFullAccess
       Environment:
         Variables:
           EVENTS_TOPIC: !Ref EventsTopic
@@ -151,6 +153,7 @@ Resources:
       CodeUri: locations-persist-lambda/target/locations-persist-lambda-1.0-SNAPSHOT.jar
       Policies:
         - AmazonDynamoDBFullAccess
+        - AWSXrayFullAccess
       Environment:
         Variables:
           LOCATIONS_TABLE: !Ref LocationsTable
@@ -170,6 +173,7 @@ Resources:
       CodeUri: locations-query-lambda/target/locations-query-lambda-1.0-SNAPSHOT.jar
       Policies:
         - AmazonDynamoDBFullAccess
+        - AWSXrayWriteOnlyAccess
       Environment:
         Variables:
           LOCATIONS_TABLE: !Ref LocationsTable
