@@ -58,7 +58,7 @@
             --output text
     ```
     The output should look something like this:
-    ```json
+    ```
     s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o
     ```
 
@@ -73,16 +73,3 @@
     ```bash
     $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial
     ```
-
-#### Build/deploy cycle
-
-```bash
-$ mvn package && ./bin/deploy.sh
-```
-
-#### Tear down application and infrastructure
-
-```bash
-$ aws cloudformation delete-stack --stack-name <stack name>
-
-```
