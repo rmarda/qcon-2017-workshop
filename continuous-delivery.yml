@@ -16,7 +16,7 @@ Parameters:
 
 Resources:
 
-  CodeBuildJavaProject:
+  CodeBuildProject:
       Type: AWS::CodeBuild::Project
       DependsOn: CodeBuildRole
       Properties:
@@ -29,7 +29,6 @@ Resources:
           EnvironmentVariables:
           - Name: CFN_PACKAGE_S3_BUCKET
             Value: !Ref CfnPackageS3Location
-        Name: !Sub ${AWS::StackName}CodeBuildJavaProject
         ServiceRole: !Ref CodeBuildRole
         Source:
           Type: CODEPIPELINE
@@ -71,7 +70,7 @@ Resources:
           InputArtifacts:
             - Name: MyApp
           Configuration:
-              ProjectName: !Ref CodeBuildJavaProject
+              ProjectName: !Ref CodeBuildProject
           RunOrder: 1
       - Name: Deploy
         Actions:
@@ -158,3 +157,11 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AdministratorAccess #TODO: Reduce permissions
+
+Outputs:
+  SourceS3Bucket:
+    Description: S3 bucket to upload your source.zip
+    Value: !Join
+      - ''
+      - - s3://
+        - !Ref SourceS3Location
