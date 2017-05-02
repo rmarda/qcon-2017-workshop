@@ -41,7 +41,14 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
-                <version>1.11.111</version>
+                <version>1.11.122</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-xray-recorder-sdk-bom</artifactId>
+                <version>1.1.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -76,27 +83,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!--<plugin>-->
-                <!--<groupId>com.github.seanroy</groupId>-->
-                <!--<artifactId>lambda-maven-plugin</artifactId>-->
-                <!--<version>2.1.5</version>-->
-                <!--<configuration>-->
-                <!--<functionCode>${project.build.directory}/${project.build.finalName}.jar</functionCode>-->
-                <!--<version>${project.version}</version>-->
-                <!--<lambdaRoleArn>arn:aws:iam::${aws.account.id}:role/lambda_basic_execution</lambdaRoleArn>-->
-                <!--<region>${aws.region}</region>-->
-                <!--<s3Bucket>symphonia-lambda-code</s3Bucket>-->
-                <!--<forceUpdate>true</forceUpdate>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                <!--<execution>-->
-                <!--<phase>deploy</phase>-->
-                <!--<goals>-->
-                <!--<goal>deploy-lambda</goal>-->
-                <!--</goals>-->
-                <!--</execution>-->
-                <!--</executions>-->
-                <!--</plugin>-->
                 <plugin>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>2.4.3</version>
