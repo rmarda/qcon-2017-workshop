@@ -35,6 +35,10 @@
 
     ```bash
     $ wget https://github.com/symphoniacloud/oscon-2017-tutorial/archive/master.zip
+      ...
+    $ unzip oscon-2017-tutorial-master.zip
+      ...
+    $ cd oscon-2017-tutorial-master
     ```
     
 1. Create the tutorial's build pipeline using Cloudformation:
