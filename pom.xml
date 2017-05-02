@@ -22,6 +22,7 @@
         <module>api-gw-domain</module>
         <module>shared-domain</module>
         <module>events-ingest-lambda</module>
+        <module>event-generator</module>
         <module>locations-persist-lambda</module>
         <module>locations-query-lambda</module>
     </modules>

@@ -65,6 +65,43 @@
     ```
     s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o
     ```
+    
+## Workflow
+
+1. Develop locally, running tests, etc...
+    ```bash
+    $ mvn clean test
+    ```
+
+1. Package your project sources into a zip file. Exclude unnecessary files as shown here:
+    ```bash
+    $ rm source.zip && zip -r source.zip . -x README.md -x build-pipeline.yml -x \*/target/\* -x \*.git\* -x \*.iml -x \*.idea\*
+    ```
+    Note that your `source.zip` file should be fairly small, not megabytes! Mine is 184 kilobytes:
+    ```bash
+    $ du -hs source.zip 
+      184K	source.zip
+    ```
+    
+1. Upload your `source.zip` to the S3 bucket we looked up earlier:
+    
+    ```bash
+    $ aws s3 cp source.zip s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o
+      upload: ./source.zip to s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o/source.zip
+    ```
+
+1. Go to your [Cloudformation Console](https://console.aws.amazon.com/cloudformation/home), and wait until you see the `CREATE_COMPLETE` status for the `oscon-2017-tutorial` stack.
+
+1. Compile and run the event generator to send events to your API Gateway (it will be automatically discovered):
+    ```bash
+    $ mvn -pl event-generator compile exec:java
+      ...
+      [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ event-generator ---
+      API url: https://o30vnzv5ci.execute-api.us-west-2.amazonaws.com/prod/events
+      request: {"timestamp":1493754876588,"locationId":"1978BE5B1CD1DFA1A247E8B3BD6827D2","city":"Montgomery","state":"AL","temperature":42.98528743998604}
+      response: 200 / 8e3510b9-1e34-586e-8c5c-413bf809c4c4
+      ...
+    ```
 
 ## Teardown
 
