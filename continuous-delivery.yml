@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Continuous Delivery Pipeline
+Description: OSCON 2017 Serverless Tutorial Build Pipeline
 
 Parameters:
   ServerlessStackName:
@@ -34,30 +34,14 @@ Resources:
         Source:
           Type: CODEPIPELINE
 
-  CodeBuildRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          Effect: Allow
-          Principal:
-            Service: codebuild.amazonaws.com
-          Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess #TODO: Reduce permissions
-
-  Pipeline:
+  CodePipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactStoreS3Location
-#      DisableInboundStageTransitions:
-#        - DisableInboundStageTransitions
-#      Name: String
-#      RestartExecutionOnUpdate: Boolean
-      RoleArn: !GetAtt PipelineRole.Arn #TODO: Separate role
+      RestartExecutionOnUpdate: true
+      RoleArn: !GetAtt CodePipelineRole.Arn
       Stages:
       - Name: Source
         Actions:
@@ -102,7 +86,7 @@ Resources:
           Configuration:
             ActionMode: CHANGE_SET_REPLACE
             Capabilities: CAPABILITY_IAM
-            RoleArn: !GetAtt CloudformationRole.Arn #TODO: Separate role
+            RoleArn: !GetAtt CloudformationRole.Arn
             StackName: !Ref ServerlessStackName
             ChangeSetName: !Ref ServerlessStackChangeSetName
             TemplatePath: !Sub "MyAppBuild::${ServerlessStackTemplateFileName}"
@@ -117,11 +101,39 @@ Resources:
             ActionMode: CHANGE_SET_EXECUTE
             Capabilities: CAPABILITY_IAM
             ChangeSetName: !Ref ServerlessStackChangeSetName
-            RoleArn: !GetAtt CloudformationRole.Arn #TODO: Separate role
+            RoleArn: !GetAtt CloudformationRole.Arn
             StackName: !Ref ServerlessStackName
           RunOrder: 2
 
-  PipelineRole:
+  SourceS3Location:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+
+  ArtifactStoreS3Location:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+
+  CfnPackageS3Location:
+    Type: AWS::S3::Bucket
+
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess #TODO: Reduce permissions
+
+  CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -146,18 +158,3 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AdministratorAccess #TODO: Reduce permissions
-
-  SourceS3Location:
-    Type: AWS::S3::Bucket
-    Properties:
-      VersioningConfiguration:
-        Status: Enabled
-
-  ArtifactStoreS3Location:
-    Type: AWS::S3::Bucket
-    Properties:
-      VersioningConfiguration:
-        Status: Enabled
-
-  CfnPackageS3Location:
-    Type: AWS::S3::Bucket
