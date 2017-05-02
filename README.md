@@ -37,12 +37,12 @@
     $ wget https://github.com/symphoniacloud/oscon-2017-tutorial/archive/master.zip
     ```
     
-1. Create the tutorial's continuous deployment pipeline using Cloudformation:
+1. Create the tutorial's build pipeline using Cloudformation:
     ```bash
     $ aws cloudformation create-stack \
             --capabilities CAPABILITY_IAM \
             --stack-name oscon-2017-tutorial-build \
-            --template-body file://continuous-delivery.yml
+            --template-body file://build-pipeline.yml
     ```
    The output should look something like this:
     ```json
@@ -64,7 +64,7 @@
 
 ## Teardown
 
-1. Delete the continuous deployment pipeline stack:
+1. Delete the build pipeline stack:
     ```bash
     $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-build
     ```
