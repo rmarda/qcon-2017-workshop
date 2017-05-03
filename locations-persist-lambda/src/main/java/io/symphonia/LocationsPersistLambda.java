@@ -113,6 +113,12 @@ public class LocationsPersistLambda {
         if (weatherEvent.getState() != null) {
             putRequest.addItemEntry("state", new AttributeValue(weatherEvent.getState()));
         }
+        if (weatherEvent.getTemperature() != null) {
+            putRequest.addItemEntry("temperature", new AttributeValue().withN(weatherEvent.getTemperature().toString()));
+        }
+        if (weatherEvent.getTimestamp() != null) {
+            putRequest.addItemEntry("lastUpdated", new AttributeValue().withN(weatherEvent.getTimestamp().toString()));
+        }
         return new WriteRequest(putRequest);
     }
 
