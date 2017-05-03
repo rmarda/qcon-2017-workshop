@@ -55,9 +55,17 @@ public class EventGenerator {
             String locationName = String.format("%s, %s", row[0], row[1]);
             String md5 = DatatypeConverter.printHexBinary(messageDigest.digest(locationName.getBytes()));
 
-            WeatherEvent weatherEvent = new WeatherEvent(System.currentTimeMillis(), md5, random.nextDouble() * 100);
+            // Generate temperature based on latitude
+            Double latitude = Double.parseDouble(row[2]);
+            Double temperature = ((1 - (Math.abs(latitude)/ 90.0)) * 140) + (random.nextDouble() * 10) - 5; // range + jitter
+
+
+            WeatherEvent weatherEvent = new WeatherEvent(System.currentTimeMillis(), md5, temperature);
             weatherEvent.setCity(row[0]);
             weatherEvent.setState(row[1]);
+            weatherEvent.setLatitude(latitude);
+            weatherEvent.setLongitude(Double.parseDouble(row[3]));
+
             String json = jsonMapper.writeValueAsString(weatherEvent);
 
             // Build HTTP Post
