@@ -75,7 +75,7 @@
 
 1. Package your project sources into a zip file. Exclude unnecessary files as shown here:
     ```bash
-    $ rm source.zip && zip -r source.zip . -x README.md -x build-pipeline.yml -x \*/target/\* -x \*.git\* -x \*.iml -x \*.idea\*
+    $ rm -f source.zip && zip -r source.zip . -x README.md -x build-pipeline.yml -x \*/target/\* -x \*.git\* -x \*.iml -x \*.idea\*
     ```
     Note that your `source.zip` file should be fairly small, not megabytes! Mine is 184 kilobytes:
     ```bash
