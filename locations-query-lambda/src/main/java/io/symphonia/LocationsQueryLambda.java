@@ -7,18 +7,28 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.amazonaws.services.lambda.runtime.Context;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.symphonia.events.ApiGatewayProxyRequest;
 import io.symphonia.events.ApiGatewayProxyResponse;
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+import org.geojson.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 
 public class LocationsQueryLambda {
 
     private final Logger LOG = LoggerFactory.getLogger(LocationsQueryLambda.class);
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private final AmazonDynamoDB dynamoDbClient;
     private final String locationsTable;
@@ -37,7 +47,18 @@ public class LocationsQueryLambda {
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request, Context context) throws Exception {
         LOG.info("Received request ID [{}]", context.getAwsRequestId());
 
-        String state = request.getQueryStringParameters().get("state");
+        String state = request.getQueryStringParameters() != null ?
+                request.getQueryStringParameters().get("state") : null;
+
+        // headers: {
+        //   "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        //   "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+        // }
+        ApiGatewayProxyResponse response = new ApiGatewayProxyResponse();
+        response.setHeaders(new HashMap<String, String>() {{
+            put("Access-Control-Allow-Origin", "*");
+        }});
+
         if (state != null && !state.isEmpty()) {
 
             Condition condition = new Condition()
@@ -53,11 +74,63 @@ public class LocationsQueryLambda {
                     .withKeyConditions(keyConditions);
 
             QueryResult queryResult = dynamoDbClient.query(queryRequest);
+            String json = toGeoJson(queryResult.getItems());
 
-            // Return success and JSON response
-            return new ApiGatewayProxyResponse(200, queryResult.toString());
+            if (queryResult.getCount() > 0) {
+                // Return success and JSON response
+                response.setStatusCode(200);
+                response.setBody(json);
+                return response;
+            }
         } else {
-            return new ApiGatewayProxyResponse(404);
+
+            ScanRequest scanRequest = new ScanRequest()
+                    .withTableName(locationsTable)
+                    .withLimit(100);
+
+            ScanResult scanResult = dynamoDbClient.scan(scanRequest);
+            String json = toGeoJson(scanResult.getItems());
+
+            response.setStatusCode(200);
+            response.setBody(json);
+
+            return response;
         }
+
+        response.setStatusCode(404);
+        return response;
     }
+
+    private String toGeoJson(List<Map<String, AttributeValue>> items) throws JsonProcessingException {
+        FeatureCollection featureCollection =
+                items.stream()
+                        .filter(this::hasLngLat)
+                        .map(this::toFeature)
+                        .collect(Collector.of(FeatureCollection::new, FeatureCollection::add,
+                                (l, r) -> {
+                                    l.addAll(r.getFeatures());
+                                    return l;
+                                }));
+
+        return mapper.writeValueAsString(featureCollection);
+    }
+
+    private boolean hasLngLat(Map<String, AttributeValue> item) {
+        return item.containsKey("longitude") && item.containsKey("latitude");
+    }
+
+    private Feature toFeature(Map<String, AttributeValue> item) {
+        Double longitude = Double.parseDouble(item.get("longitude").getN());
+        Double latitude = Double.parseDouble(item.get("latitude").getN());
+
+        Feature feature = new Feature();
+        feature.setGeometry(new Point(longitude, latitude));
+        if (item.containsKey("temperature")) {
+            Double temperature = Double.parseDouble(item.get("temperature").getN());
+            feature.setProperty("temperature", temperature);
+        }
+
+        return feature;
+    }
+
 }
