@@ -1,7 +1,6 @@
 package io.symphonia;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.BatchWriteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
@@ -11,6 +10,7 @@ import io.symphonia.domain.WeatherEvent;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class LocationsPersistLambdaTest {
     private String locationsTable = "test-locations-table";
 
     @Test
-    public void testHandlerWritesToDynamoDb() throws JsonProcessingException {
+    public void testHandlerWritesToDynamoDb() throws IOException {
         AmazonDynamoDB mockDynamoDbClient = mock(AmazonDynamoDB.class);
         LocationsPersistLambda lambda = new LocationsPersistLambda(mockDynamoDbClient, locationsTable);
         ArgumentCaptor<PutItemRequest> putItemCaptor = ArgumentCaptor.forClass(PutItemRequest.class);
