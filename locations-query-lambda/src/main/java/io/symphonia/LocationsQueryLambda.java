@@ -50,13 +50,9 @@ public class LocationsQueryLambda {
         String state = request.getQueryStringParameters() != null ?
                 request.getQueryStringParameters().get("state") : null;
 
-        // headers: {
-        //   "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-        //   "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-        // }
         ApiGatewayProxyResponse response = new ApiGatewayProxyResponse();
         response.setHeaders(new HashMap<String, String>() {{
-            put("Access-Control-Allow-Origin", "*");
+            put("Access-Control-Allow-Origin", "*"); // Required for CORS
         }});
 
         if (state != null && !state.isEmpty()) {

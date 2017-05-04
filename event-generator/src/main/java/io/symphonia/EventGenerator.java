@@ -59,7 +59,6 @@ public class EventGenerator {
             Double latitude = Double.parseDouble(row[2]);
             Double temperature = ((1 - (Math.abs(latitude)/ 90.0)) * 140) + (random.nextDouble() * 10) - 5; // range + jitter
 
-
             WeatherEvent weatherEvent = new WeatherEvent(System.currentTimeMillis(), md5, temperature);
             weatherEvent.setCity(row[0]);
             weatherEvent.setState(row[1]);
