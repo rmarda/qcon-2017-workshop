@@ -33,7 +33,8 @@ xhr.onreadystatechange = function () {
                     },
                 onEachFeature: function (feature, layer) {
                         if (feature.properties && feature.properties.temperature) {
-                                layer.bindPopup(feature.properties.temperature.toString());
+                            layer.bindTooltip(feature.properties.temperature.toFixed().toString(),
+                            {permanent: true, opacity: 0.7}).openTooltip();
                         }
                 }}).addTo(mymap);
         } else {
