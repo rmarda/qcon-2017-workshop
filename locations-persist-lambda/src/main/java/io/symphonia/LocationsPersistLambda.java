@@ -38,19 +38,19 @@ public class LocationsPersistLambda {
         LOG.info("Received request ID [{}]", context.getAwsRequestId());
         // NB: SNS -> Lambda is only ever one message at a time.
         WeatherEvent weatherEvent = deserialize(snsEvent.getRecords().get(0));
-        writeWithBackoff(locationsTable, toPutItemRequest(weatherEvent), 1000L, 5);
+        writeWithBackoff(toPutItemRequest(locationsTable, weatherEvent), 1000L, 5);
     }
 
-    private void writeWithBackoff(String dynamoDbTable, PutItemRequest putItemRequest, long millis, int remainingTries) {
+    private void writeWithBackoff(PutItemRequest putItemRequest, long millis, int remainingTries) {
         try {
-            LOG.info("Writing item to [{}]", dynamoDbTable);
+            LOG.info("Writing item to [{}]", putItemRequest.getTableName());
             dynamoDbClient.putItem(putItemRequest);
         } catch (ProvisionedThroughputExceededException e) {
-            LOG.warn("Failed to write item to [{}], tries remaining [{}]", dynamoDbTable, remainingTries);
+            LOG.warn("Failed to write item to [{}], tries remaining [{}]", putItemRequest.getTableName(), remainingTries);
             if (remainingTries > 0) {
-                writeWithBackoff(dynamoDbTable, putItemRequest, (long) (millis * 1.5), remainingTries - 1);
+                writeWithBackoff(putItemRequest, (long) (millis * 1.5), remainingTries - 1);
             } else {
-                LOG.warn("Giving up on writing item to [{}]", dynamoDbTable);
+                LOG.warn("Giving up on writing item to [{}]", putItemRequest.getTableName());
             }
         }
     }

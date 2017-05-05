@@ -23,10 +23,10 @@ public class DynamoDbWeatherEventMapper {
                 put("lastUpdated", e -> attrN(e.getTimestamp()));
             }};
 
-    public static PutItemRequest toPutItemRequest(WeatherEvent weatherEvent) {
+    public static PutItemRequest toPutItemRequest(String table, WeatherEvent weatherEvent) {
         return MAPPING.entrySet()
                 .stream()
-                .collect(PutItemRequest::new,
+                .collect(() -> new PutItemRequest().withTableName(table),
                         (r, e) -> e.getValue().apply(weatherEvent).ifPresent(v -> r.addItemEntry(e.getKey(), v)),
                         (a, b) -> a.getItem().putAll(b.getItem()));
     }

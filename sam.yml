@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: OSCON 2017 Serverless Tutorial
+Description: OSCON 2017 Serverless Tutorial Application
 
 Resources:
 
@@ -109,6 +109,9 @@ Resources:
                   description: "200 response"
                   schema:
                     $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
               x-amazon-apigateway-integration:
                 responses:
                   default:

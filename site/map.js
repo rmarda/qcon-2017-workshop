@@ -9,7 +9,7 @@ maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyrigh
 // Call out to API Gateway, ask for current locations
 var xhr = new XMLHttpRequest();
 // Replace this URL
-xhr.open('GET', 'https://o30vnzv5ci.execute-api.us-west-2.amazonaws.com/prod/locations');
+xhr.open('GET', 'https://eho8s0g361.execute-api.us-west-2.amazonaws.com/prod/locations');
 xhr.send(null);
 
 // Add locations to map

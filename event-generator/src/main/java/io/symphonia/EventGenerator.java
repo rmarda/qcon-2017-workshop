@@ -31,7 +31,7 @@ public class EventGenerator {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         AmazonCloudFormation cloudFormation = AmazonCloudFormationClientBuilder.defaultClient();
         DescribeStacksRequest describeStacksRequest =
-                new DescribeStacksRequest().withStackName("oscon-2017-tutorial");
+                new DescribeStacksRequest().withStackName("oscon-2017-tutorial-application");
         DescribeStacksResult describeStacksResult = cloudFormation.describeStacks(describeStacksRequest);
 
         String apiUrl = describeStacksResult.getStacks().get(0).getOutputs().stream()

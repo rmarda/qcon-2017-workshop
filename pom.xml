@@ -10,9 +10,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <kinesis.stream>pipeline-demo-stream</kinesis.stream>
-        <dynamodb.lambdas.table>pipeline-demo-lambdas-table</dynamodb.lambdas.table>
-        <dynamodb.requests.table>pipeline-demo-requests-table</dynamodb.requests.table>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,10 +97,14 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <skip>true</skip>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>zip-assembly.xml</descriptor>
+                    </descriptors>
+                    <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
                 </configuration>
             </plugin>
         </plugins>
