@@ -41,46 +41,58 @@
     $ cd oscon-2017-tutorial-master
     ```
     
-1. Create the tutorial's build pipeline using Cloudformation:
+1. Create the tutorial's build pipeline using Cloudformation. The build pipeline will create the application, also 
+with Cloudformation. Note that the build pipeline stack name is specified using the `--stack-name` command line flag, while
+the application stack name is specified as a parameter to the stack template.
+   
+   :warning: Stack names must be unique within an AWS account. If multiple attendees are working in the same account, 
+   pick unique stack names for both stacks!
+   
     ```bash
     $ aws cloudformation create-stack \
             --capabilities CAPABILITY_IAM \
-            --stack-name oscon-2017-tutorial-build \
+            --stack-name oscon-2017-tutorial-build-pipeline \
+            --parameters ParameterKey=ApplicationStackName,ParameterValue=oscon-2017-tutorial-application
             --template-body file://build-pipeline.yml
     ```
    The output should look something like this:
     ```json
     {
-        "StackId": "arn:aws:cloudformation:us-west-2:1234567890:stack/oscon-2017-tutorial-build/7972b720-2f5b-11e7-bd3d-503acbd4dcfd"
+        "StackId": "arn:aws:cloudformation:us-west-2:1234567890:stack/oscon-2017-tutorial-build-pipeline/7972b720-2f5b-11e7-bd3d-503acbd4dcfd"
     }
     ```
     
-1. Get the S3 url where you'll upload code during the tutorial:
+1. Get the S3 url where you'll upload code during the tutorial. Use your build pipeline stack name if it's different from this:
     ```bash
     $ aws cloudformation describe-stacks \
-            --query 'Stacks[?StackName==`oscon-2017-tutorial-build`].Outputs[0][?OutputKey==`SourceS3Bucket`].OutputValue' \
+            --query 'Stacks[?StackName==`oscon-2017-tutorial-build-pipeline`].Outputs[0][?OutputKey==`SourceS3Bucket`].OutputValue' \
             --output text
     ```
     The output should look something like this:
     ```
-    s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o
+    s3://oscon-2017-tutorial-build-pipeline-sources3location-hdea5qp6h2o
     ```
     
 ## Workflow
 
-1. Develop locally, running tests, etc...
+Generally, our workflow is going to look something like this:
+
+1. Develop locally, run tests, etc...
     ```bash
     $ mvn clean test
     ```
 
 1. Package your project sources into a zip file. Exclude unnecessary files as shown here:
     ```bash
-    $ rm -f source.zip && zip -r source.zip . -x README.md -x build-pipeline.yml -x \*/target/\* -x \*.git\* -x \*.iml -x \*.idea\*
+    $ rm -f source.zip && zip -r source.zip pom.xml buildspec.yml sam.yml \
+                                            api-gw-domain event-generator events-ingest-lambda \
+                                            locations-persist-lambda locations-query-lambda shared-domain \
+                                            -x \*/target/\* -x \*.iml
     ```
-    Note that your `source.zip` file should be fairly small, not megabytes! Mine is 184 kilobytes:
+    Note that your `source.zip` file should be fairly small, not megabytes! Mine is 36 kilobytes:
     ```bash
     $ du -hs source.zip 
-      184K	source.zip
+      36K	source.zip
     ```
     
 1. Upload your `source.zip` to the S3 bucket we looked up earlier:
@@ -89,8 +101,12 @@
     $ aws s3 cp source.zip s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o
       upload: ./source.zip to s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o/source.zip
     ```
+    
+    This will automatically kick off the build pipeline, which will result in your code being compiled, tests run, 
+    deployment packages created and uploaded to S3, and finally, the application Cloudformation stack will be deployed.
 
-1. Go to your [Cloudformation Console](https://console.aws.amazon.com/cloudformation/home), and wait until you see the `CREATE_COMPLETE` status for the `oscon-2017-tutorial` stack.
+1. Go to your [Cloudformation Console](https://console.aws.amazon.com/cloudformation/home), and wait until you see the 
+`CREATE_COMPLETE` status for your application stack.
 
 1. Compile and run the event generator to send events to your API Gateway (it will be automatically discovered):
     ```bash
@@ -107,10 +123,10 @@
 
 1. Delete the build pipeline stack:
     ```bash
-    $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-build
+    $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-build-pipeline
     ```
 
 1. Delete the application stack:
     ```bash
-    $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial
+    $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-application
     ```
