@@ -52,7 +52,7 @@ the application stack name is specified as a parameter to the stack template.
     $ aws cloudformation create-stack \
             --capabilities CAPABILITY_IAM \
             --stack-name oscon-2017-tutorial-build-pipeline \
-            --parameters ParameterKey=ApplicationStackName,ParameterValue=oscon-2017-tutorial-application
+            --parameters ParameterKey=ApplicationStackName,ParameterValue=oscon-2017-tutorial-application \
             --template-body file://build-pipeline.yml
     ```
    The output should look something like this:
