@@ -2,17 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: OSCON 2017 Serverless Tutorial Build Pipeline
 
 Parameters:
-  ServerlessStackName:
+  ApplicationStackName:
     Type: String
-    Default: oscon-2017-tutorial
+    Default: oscon-2017-tutorial-application
     AllowedPattern: "[A-Za-z0-9-]+"
-  ServerlessStackChangeSetName:
-    Type: String
-    Default: change-set
-    AllowedPattern: "[A-Za-z0-9-]+"
-  ServerlessStackTemplateFileName:
-    Type: String
-    Default: packaged-sam.yml
 
 Resources:
 
@@ -86,9 +79,9 @@ Resources:
             ActionMode: CHANGE_SET_REPLACE
             Capabilities: CAPABILITY_IAM
             RoleArn: !GetAtt CloudformationRole.Arn
-            StackName: !Ref ServerlessStackName
-            ChangeSetName: !Ref ServerlessStackChangeSetName
-            TemplatePath: !Sub "MyAppBuild::${ServerlessStackTemplateFileName}"
+            StackName: !Ref ApplicationStackName
+            ChangeSetName: changeset
+            TemplatePath: !Sub "MyAppBuild::packaged-sam.yml" # Must match buildspec.yml value
           RunOrder: 1
         - Name: ExecuteChangeSet
           ActionTypeId:
@@ -99,9 +92,9 @@ Resources:
           Configuration:
             ActionMode: CHANGE_SET_EXECUTE
             Capabilities: CAPABILITY_IAM
-            ChangeSetName: !Ref ServerlessStackChangeSetName
+            ChangeSetName: changeset
             RoleArn: !GetAtt CloudformationRole.Arn
-            StackName: !Ref ServerlessStackName
+            StackName: !Ref ApplicationStackName
           RunOrder: 2
 
   SourceS3Location:
