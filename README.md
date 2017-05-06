@@ -77,6 +77,11 @@ the application stack name is specified as a parameter to the stack template.
 
 Generally, our workflow is going to look something like this:
 
+1. Change into the appropriate phase directory:
+    ```bash
+    $ cd phase1
+    ```
+
 1. Develop locally, run tests, etc...
     ```bash
     $ mvn clean test
@@ -84,14 +89,11 @@ Generally, our workflow is going to look something like this:
 
 1. Package your project sources into a zip file. Exclude unnecessary files as shown here:
     ```bash
-    $ rm -f source.zip && zip -r source.zip pom.xml buildspec.yml sam.yml \
-                                            api-gw-domain event-generator events-ingest-lambda \
-                                            locations-persist-lambda locations-query-lambda shared-domain \
-                                            -x \*/target/\* -x \*.iml
+    $ mvn install && mvn assembly:single 
     ```
     Note that your `source.zip` file should be fairly small, not megabytes! Mine is 36 kilobytes:
     ```bash
-    $ du -hs source.zip 
+    $ du -hs target/source.zip
       36K	source.zip
     ```
     
@@ -120,6 +122,18 @@ Generally, our workflow is going to look something like this:
     ```
 
 ## Teardown
+
+1. Find the physical resource IDs for the build pipeline's S3 buckets
+    ```bash
+    $ aws cloudformation list-stack-resources --stack-name oscon-2017-tutorial-build-pipeline \
+          --query 'StackResourceSummaries[?ResourceType==`AWS::S3::Bucket`].PhysicalResourceId' \
+          --output text
+    ```
+
+1. Delete those buckets using the physical resource IDs
+    ```bash
+    $ aws s3 rb s3://bucket-physical-resource-id --force
+    ```
 
 1. Delete the build pipeline stack:
     ```bash
