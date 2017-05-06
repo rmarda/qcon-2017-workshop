@@ -98,29 +98,11 @@ Resources:
             Method: POST
 
   LocationsTable:
-    Type: AWS::DynamoDB::Table
+    Type: AWS::Serverless::SimpleTable
     Properties:
-      AttributeDefinitions:
-        - AttributeName: "locationId"
-          AttributeType: "S"
-        - AttributeName: "state"
-          AttributeType: "S"
-      KeySchema:
-        - AttributeName: "locationId"
-          KeyType: "HASH"
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      GlobalSecondaryIndexes:
-        - IndexName: "stateIndex"
-          KeySchema:
-            - AttributeName: "state"
-              KeyType: "HASH"
-          Projection:
-            ProjectionType: "ALL"
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 5
+      PrimaryKey:
+        Name: locationId
+        Type: String
 
 Outputs:
   ApiUrl:
