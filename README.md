@@ -112,13 +112,12 @@ Generally, our workflow is going to look something like this:
 
 1. Compile and run the event generator to send events to your API Gateway (it will be automatically discovered):
     ```bash
-    $ mvn -pl event-generator compile exec:java
-      ...
-      [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ event-generator ---
+    $ cd event-generator
+    $ mvn clean package
+    $ java -jar target/event-generator-1.0-SNAPSHOT.jar --limit 1 --stack oscon-2017-tutorial-application
       API url: https://o30vnzv5ci.execute-api.us-west-2.amazonaws.com/prod/events
       request: {"timestamp":1493754876588,"locationId":"1978BE5B1CD1DFA1A247E8B3BD6827D2","city":"Montgomery","state":"AL","temperature":42.98528743998604}
       response: 200 / 8e3510b9-1e34-586e-8c5c-413bf809c4c4
-      ...
     ```
 
 ## Teardown
