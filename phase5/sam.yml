@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: OSCON 2017 Serverless Tutorial (Phase 5)
+
+Resources:
+
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          title:
+            Ref: AWS::StackName
+        basePath: "/prod"
+        schemes:
+        - "https"
+        paths:
+          /events:
+            post:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              parameters:
+              - in: "body"
+                name: "EventBodyModel"
+                required: true
+                schema:
+                  $ref: "#/definitions/EventBodyModel"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-request-validator: "ValidateBody"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EventsIngestLambda.Arn}/invocations"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+          /locations:
+            get:
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+        definitions:
+          Empty:
+            type: "object"
+            title: "Empty Schema"
+          EventBodyModel:
+            type: "object"
+            properties:
+              timestamp:
+                type: "integer"
+              locationId:
+                type: "string"
+              locationName:
+                type: "string"
+              latitude:
+                type: "number"
+              longitude:
+                type: "number"
+              city:
+                type: "string"
+              state:
+                type: "string"
+              temperature:
+                type: "number"
+            required:
+            - timestamp
+            - location_id
+            - temperature
+        x-amazon-apigateway-request-validators:
+          ValidateBody:
+            validateRequestParameters: false
+            validateRequestBody: true
+
+  EventsIngestLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.EventsIngestLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 10
+      CodeUri: events-ingest-lambda-phase5/target/events-ingest-lambda-phase5-1.0-SNAPSHOT.jar
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /events
+            Method: POST
+
+  LocationsQueryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.LocationsQueryLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 300
+      CodeUri: locations-query-lambda-phase5/target/locations-query-lambda-phase5-1.0-SNAPSHOT.jar
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        QueryLocation:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /locations
+            Method: GET
+
+  LocationsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: locationId
+        Type: String
+
+Outputs:
+  ApiUrl:
+    Description: URL of your API endpoint
+    Value: !Join
+      - ''
+      - - https://
+        - !Ref Api
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com/prod'
