@@ -1,5 +1,5 @@
 // FIXME: Replace with real URL
-var apiUrl = 'https://3qmkethmca.execute-api.us-west-2.amazonaws.com/prod/locations';
+var apiUrl = '';
 
 // Center on United States
 var mymap = L.map('map').setView([39.833333, -98.583333], 5);
