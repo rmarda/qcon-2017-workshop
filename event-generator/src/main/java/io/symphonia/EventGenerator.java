@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 public class EventGenerator {
 
+    // TODO: Args for number of events, valid / invalid
+
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         AmazonCloudFormation cloudFormation = AmazonCloudFormationClientBuilder.defaultClient();
         DescribeStacksRequest describeStacksRequest =
