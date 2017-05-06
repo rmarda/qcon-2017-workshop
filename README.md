@@ -87,7 +87,7 @@ Generally, our workflow is going to look something like this:
     $ mvn clean test
     ```
 
-1. Package your project sources into a zip file. Exclude unnecessary files as shown here:
+1. Package your project sources into a zip file:
     ```bash
     $ mvn install && mvn assembly:single 
     ```
