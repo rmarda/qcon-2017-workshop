@@ -123,6 +123,11 @@ Generally, our workflow is going to look something like this:
 
 ## Teardown
 
+1. Delete the application stack:
+    ```bash
+    $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-application
+    ```
+
 1. Find the physical resource IDs for the build pipeline's S3 buckets
     ```bash
     $ aws cloudformation list-stack-resources --stack-name oscon-2017-tutorial-build-pipeline \
@@ -138,9 +143,4 @@ Generally, our workflow is going to look something like this:
 1. Delete the build pipeline stack:
     ```bash
     $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-build-pipeline
-    ```
-
-1. Delete the application stack:
-    ```bash
-    $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-application
     ```
