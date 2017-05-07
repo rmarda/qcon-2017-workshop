@@ -87,6 +87,8 @@ Because each phase is standalone, don't worry if you're not able to finish or ma
 
 ## Teardown
 
+:warning: These steps must be completed in order, or resources might be stranded.
+
 1. Delete the application stack:
     ```bash
     $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-application
