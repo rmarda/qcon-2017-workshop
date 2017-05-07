@@ -35,7 +35,7 @@ $ aws lambda invoke --function-name FUNCTION_NAME \
                     --payload '{"locationId": "test123"}' \
                     out
 $ cat out
-{"locationId: "test123"
+{"locationId: "test123"}
 ```
 
 ## Explore
