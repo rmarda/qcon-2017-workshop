@@ -32,7 +32,6 @@ Once your Lambda function is deployed, invoke it using the AWS API (or the web c
 ```bash
 $ aws lambda invoke --function-name FUNCTION_NAME \
                     --invocation-type RequestResponse \
-                    --log Tail \
                     --payload '{"locationId": "test123"}' \
                     out
 ```
