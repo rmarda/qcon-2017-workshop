@@ -30,7 +30,11 @@ Verify that the Code Pipeline deploy process has started: https://console.aws.am
 Once your Lambda function is deployed, invoke it using the AWS API (or the web console):
 
 ```bash
-$ 
+$ aws lambda invoke --function-name FUNCTION_NAME \
+                    --invocation-type RequestResponse \
+                    --log Tail \
+                    --payload '{"locationId": "test123"}' \
+                    out
 ```
 
 ## Explore
