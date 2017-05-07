@@ -34,6 +34,8 @@ $ aws lambda invoke --function-name FUNCTION_NAME \
                     --invocation-type RequestResponse \
                     --payload '{"locationId": "test123"}' \
                     out
+$ cat out
+{"locationId: "test123"
 ```
 
 ## Explore
