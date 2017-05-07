@@ -72,6 +72,10 @@ the application stack name is specified as a parameter to the stack template.
     ```
     s3://oscon-2017-tutorial-build-pipeline-sources3location-hdea5qp6h2o
     ```
+    It may be helpful to save this information in an environment variables (we'll use it later):
+    ```bash
+    export S3_SOURCE=YOUR_S3_BUCKET
+    ```
     
 ## Tutorial
 
