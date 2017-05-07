@@ -103,7 +103,7 @@ Because each phase is standalone, don't worry if you're not able to finish or ma
     ```bash
     $ aws s3 rb s3://bucket-physical-resource-id --force
     ```
-    If this command fails, you'll need to use the S3 web console (https://console.aws.amazon.com/s3/home)
+    :warning: If this command fails, you'll need to use the S3 web console (https://console.aws.amazon.com/s3/home)
 
 1. Delete the build pipeline stack:
     ```bash
