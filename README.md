@@ -73,52 +73,13 @@ the application stack name is specified as a parameter to the stack template.
     s3://oscon-2017-tutorial-build-pipeline-sources3location-hdea5qp6h2o
     ```
     
-## Workflow
+## Tutorial
 
-Generally, our workflow is going to look something like this:
+Look at the `README.md` file in the `phase1` directory to get started.
 
-1. Change into the appropriate phase directory:
-    ```bash
-    $ cd phase1
-    ```
+Work through each phase as directed by the instructors.
 
-1. Develop locally, run tests, etc...
-    ```bash
-    $ mvn clean test
-    ```
-
-1. Package your project sources into a zip file:
-    ```bash
-    $ mvn install && mvn assembly:single 
-    ```
-    Note that your `source.zip` file should be fairly small, not megabytes! Mine is 36 kilobytes:
-    ```bash
-    $ du -hs target/source.zip
-      36K	source.zip
-    ```
-    
-1. Upload your `source.zip` to the S3 bucket we looked up earlier:
-    
-    ```bash
-    $ aws s3 cp source.zip s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o
-      upload: ./source.zip to s3://oscon-2017-tutorial-build-sources3location-hdea5qp6h2o/source.zip
-    ```
-    
-    This will automatically kick off the build pipeline, which will result in your code being compiled, tests run, 
-    deployment packages created and uploaded to S3, and finally, the application Cloudformation stack will be deployed.
-
-1. Go to your [Cloudformation Console](https://console.aws.amazon.com/cloudformation/home), and wait until you see the 
-`CREATE_COMPLETE` status for your application stack.
-
-1. Compile and run the event generator to send events to your API Gateway (it will be automatically discovered):
-    ```bash
-    $ cd event-generator
-    $ mvn clean package
-    $ java -jar target/event-generator-1.0-SNAPSHOT.jar --limit 1 --stack oscon-2017-tutorial-application
-      API url: https://o30vnzv5ci.execute-api.us-west-2.amazonaws.com/prod/events
-      request: {"timestamp":1493754876588,"locationId":"1978BE5B1CD1DFA1A247E8B3BD6827D2","city":"Montgomery","state":"AL","temperature":42.98528743998604}
-      response: 200 / 8e3510b9-1e34-586e-8c5c-413bf809c4c4
-    ```
+Because each phase is standalone, don't worry if you're not able to finish or make a mistake. The next phase will have everything you need to keep going along with the rest of the group.
 
 ## Teardown
 
@@ -134,10 +95,11 @@ Generally, our workflow is going to look something like this:
           --output text
     ```
 
-1. Delete those buckets using the physical resource IDs
+1. Delete those buckets using the physical resource IDs.
     ```bash
     $ aws s3 rb s3://bucket-physical-resource-id --force
     ```
+    If this command fails, you'll need to use the S3 web console (https://console.aws.amazon.com/s3/home)
 
 1. Delete the build pipeline stack:
     ```bash
