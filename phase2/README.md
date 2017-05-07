@@ -40,7 +40,7 @@ $ mvn clean package
 $ java -jar target/event-generator-1.0-SNAPSHOT.jar --limit 1 --stack oscon-2017-tutorial-application
 API url: https://o30vnzv5ci.execute-api.us-west-2.amazonaws.com/prod/events
 request: {"timestamp":1494108607587,"locationId":"1978BE5B1CD1DFA1A247E8B3BD6827D2","locationName":"Montgomery, AL","latitude":32.361538,"longitude":-86.279118,"city":"Montgomery","state":"AL","temperature":85.5631845254945}
-response: 200 / 8e3510b9-1e34-586e-8c5c-413bf809c4c4
+response: 200 / 1978BE5B1CD1DFA1A247E8B3BD6827D2
 ```
 
 Note that the `event-generator` tool is just a convenience - feel free to use `curl` or any other tool
