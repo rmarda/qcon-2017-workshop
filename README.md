@@ -1,6 +1,6 @@
 # Symphonia / OSCON 2017 Tutorial
 
-#### :warning: *Windows users may need replace double-quotes with single-quotes to run some of the AWS commands.*
+#### :warning: *Windows users may need edit the example commands - double quotes and backslashes may be problematic.*
 
 ## Initial Setup
 
