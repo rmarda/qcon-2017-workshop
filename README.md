@@ -114,3 +114,6 @@ Because each phase is standalone, don't worry if you're not able to finish or ma
     ```bash
     $ aws cloudformation delete-stack --stack-name oscon-2017-tutorial-build-pipeline
     ```
+    
+-----
+Copyright 2017, Symphonia LLC
