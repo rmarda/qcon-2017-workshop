@@ -1,6 +1,11 @@
 # Symphonia / OSCON 2017 Tutorial
 
-#### :warning: *Windows users may need edit the example commands - double quotes and backslashes may be problematic.*
+#### :warning: *Windows users may need edit the example commands. Here are some tips:*
+
+- Double-quotes (`"`) can be escaped with backslashes like this: (`\"`)
+- Variables substitution is `%VARIABLE_NAME%`
+- Instead of the `cat` command, use the `type` command
+- The backslashes used to indicate multi-line commands in the examples will need to be removed.
 
 ## Initial Setup
 
