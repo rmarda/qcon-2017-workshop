@@ -1,5 +1,7 @@
 # Symphonia / OSCON 2017 Tutorial
 
+#### :warning: *Windows users may need replace double-quotes with single-quotes to run some of the AWS commands.*
+
 ## Initial Setup
 
 1. Make sure your AWS user has full permissions within your AWS account.
