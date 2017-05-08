@@ -31,10 +31,10 @@
     }
     ```
     
-1. Download and unzip the tutorial repository from Github:
+1. Download and unzip the tutorial project:
 
     ```bash
-    $ wget https://github.com/symphoniacloud/oscon-2017-tutorial/archive/master.zip
+    $ wget https://symphonia.io/oscon-2017-tutorial-master.zip
       ...
     $ unzip oscon-2017-tutorial-master.zip
       ...
