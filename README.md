@@ -1,5 +1,9 @@
 # Symphonia / OSCON 2017 Tutorial
 
+## Chat room
+
+Join this public Hipchat room to discuss and share information with your fellow attendees: https://www.hipchat.com/gUqQZrLrv
+
 #### :warning: *Windows users may need edit the example commands. Here are some tips:*
 
 - Double-quotes (`"`) can be escaped with backslashes like this: (`\"`)
