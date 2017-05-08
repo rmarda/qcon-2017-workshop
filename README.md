@@ -4,6 +4,10 @@
 
 Join this public Hipchat room to discuss and share information with your fellow attendees: https://www.hipchat.com/gUqQZrLrv
 
+## Resources
+
+After the tutorial, you can find links and resources here: https://bit.ly/symph-oscon-2017
+
 ## Initial Setup
 
 #### :warning: *Windows users may need edit the example commands. Here are some tips:*
