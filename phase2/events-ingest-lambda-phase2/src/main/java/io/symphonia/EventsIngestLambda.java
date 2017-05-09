@@ -18,7 +18,7 @@ public class EventsIngestLambda {
         LOG.info("Received request ID [{}]", context.getAwsRequestId());
 
         // FIXME: Deserialize WeatherEvent from request body
-        WeatherEvent weatherEvent = objectMapper.readValue(/* FIXME --> */ "" /* <-- FIXME */, WeatherEvent.class);
+        WeatherEvent weatherEvent = objectMapper.readValue(/* FIXME --> */ request.getBody() /* <-- FIXME */, WeatherEvent.class);
 
         String responseBody = weatherEvent.getLocationId();
 

@@ -70,7 +70,7 @@ public class EventsIngestLambdaTest {
         assertThat(response.getBody(), is("TEST-LOCATION-ID"));
 
         // FIXME: Verify the retry happens, once the code is fixed
-        // verify(mockDynamoDbClient, times(2)).putItem(any(PutItemRequest.class));
+         verify(mockDynamoDbClient, times(2)).putItem(any(PutItemRequest.class));
     }
 
 }

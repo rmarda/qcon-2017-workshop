@@ -12,6 +12,7 @@ import org.geojson.FeatureCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static io.symphonia.GeoJsonFeatureMapper.toFeatureCollection;
@@ -54,6 +55,7 @@ public class LocationsQueryLambda {
         response.setBody(json);
 
         // FIXME: Add "Access-Control-Allow-Origin: *" header to response
+        response.setHeaders(Collections.singletonMap("Access-Control-Allow-Origin","*"));
 
         return response;
     }

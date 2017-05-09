@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static io.symphonia.GeoJsonFeatureMapper.toFeatureCollection;
 
@@ -38,10 +39,12 @@ public class LocationsQueryLambda {
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request, Context context) throws Exception {
         LOG.info("Received request ID [{}]", context.getAwsRequestId());
 
+        Map<String, String> queryStringParameters = request.getQueryStringParameters() == null ? new HashMap<>() : request.getQueryStringParameters();
+
         // FIXME: Allow limit to be passed in as a query parameter
         ScanRequest scanRequest = new ScanRequest()
                 .withTableName(locationsTable)
-                .withLimit(10);
+                .withLimit(Integer.parseInt(queryStringParameters.getOrDefault("limit", "10")));
 
         ScanResult scanResult = dynamoDbClient.scan(scanRequest);
         FeatureCollection featureCollection = toFeatureCollection(scanResult.getItems());

@@ -27,14 +27,14 @@ Resources:
               - in: "body"
                 name: "EventBodyModel"
                 required: true
-#                schema:
-#                  $ref: "#/definitions/EventBodyModel"
+                schema:
+                  $ref: "#/definitions/EventBodyModel"
               responses:
                 "200":
                   description: "200 response"
                   schema:
                     $ref: "#/definitions/Empty"
-#              x-amazon-apigateway-request-validator: "ValidateBody"
+              x-amazon-apigateway-request-validator: "ValidateBody"
               x-amazon-apigateway-integration:
                 responses:
                   default:
@@ -44,37 +44,37 @@ Resources:
                 httpMethod: "POST"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
-#        definitions:
-#          Empty:
-#            type: "object"
-#            title: "Empty Schema"
-#          EventBodyModel:
-#            type: "object"
-#            properties:
-#              timestamp:
-#                type: "integer"
-#              locationId:
-#                type: "string"
-#              locationName:
-#                type: "string"
-#              latitude:
-#                type: "number"
-#              longitude:
-#                type: "number"
-#              city:
-#                type: "string"
-#              state:
-#                type: "string"
-#              temperature:
-#                type: "number"
-#            required:
-#            - timestamp
-#            - location_id
-#            - temperature
-#        x-amazon-apigateway-request-validators:
-#          ValidateBody:
-#            validateRequestParameters: false
-#            validateRequestBody: true
+        definitions:
+          Empty:
+            type: "object"
+            title: "Empty Schema"
+          EventBodyModel:
+            type: "object"
+            properties:
+              timestamp:
+                type: "integer"
+              locationId:
+                type: "string"
+              locationName:
+                type: "string"
+              latitude:
+                type: "number"
+              longitude:
+                type: "number"
+              city:
+                type: "string"
+              state:
+                type: "string"
+              temperature:
+                type: "number"
+            required:
+            - timestamp
+            - location_id
+            - temperature
+        x-amazon-apigateway-request-validators:
+          ValidateBody:
+            validateRequestParameters: false
+            validateRequestBody: true
 
   EventsIngestLambda:
     Type: AWS::Serverless::Function

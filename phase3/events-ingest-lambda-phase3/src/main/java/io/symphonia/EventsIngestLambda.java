@@ -40,29 +40,30 @@ public class EventsIngestLambda {
         PutItemRequest putItemRequest = toPutItemRequest(locationsTable, weatherEvent);
 
         // FIXME: What if this is throttled?
-        dynamoDbClient.putItem(putItemRequest);
+//        dynamoDbClient.putItem(putItemRequest);
+        writeWithBackoff(putItemRequest);
 
         String responseBody = weatherEvent.getLocationId();
 
         return new ApiGatewayProxyResponse(200, responseBody);
     }
 
-//    private void writeWithBackoff(PutItemRequest putItemRequest) {
-//        writeWithBackoff(putItemRequest, 1000L, 5);
-//    }
-//
-//    private void writeWithBackoff(PutItemRequest putItemRequest, long millis, int remainingTries) {
-//        try {
-//            LOG.info("Writing item to [{}]", putItemRequest.getTableName());
-//            dynamoDbClient.putItem(putItemRequest);
-//        } catch (ProvisionedThroughputExceededException e) {
-//            LOG.warn("Failed to write item to [{}], tries remaining [{}]", putItemRequest.getTableName(), remainingTries);
-//            if (remainingTries > 0) {
-//                writeWithBackoff(putItemRequest, (long) (millis * 1.5), remainingTries - 1);
-//            } else {
-//                LOG.warn("Giving up on writing item to [{}]", putItemRequest.getTableName());
-//            }
-//        }
-//    }
+    private void writeWithBackoff(PutItemRequest putItemRequest) {
+        writeWithBackoff(putItemRequest, 1000L, 5);
+    }
+
+    private void writeWithBackoff(PutItemRequest putItemRequest, long millis, int remainingTries) {
+        try {
+            LOG.info("Writing item to [{}]", putItemRequest.getTableName());
+            dynamoDbClient.putItem(putItemRequest);
+        } catch (ProvisionedThroughputExceededException e) {
+            LOG.warn("Failed to write item to [{}], tries remaining [{}]", putItemRequest.getTableName(), remainingTries);
+            if (remainingTries > 0) {
+                writeWithBackoff(putItemRequest, (long) (millis * 1.5), remainingTries - 1);
+            } else {
+                LOG.warn("Giving up on writing item to [{}]", putItemRequest.getTableName());
+            }
+        }
+    }
 
 }

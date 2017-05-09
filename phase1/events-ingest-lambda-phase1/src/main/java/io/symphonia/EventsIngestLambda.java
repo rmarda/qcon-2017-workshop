@@ -12,7 +12,7 @@ public class EventsIngestLambda {
     // FIXME: Write a handler method that accepts a WeatherEvent object, and returns it
     public WeatherEvent handler(WeatherEvent weatherEvent, Context context) throws Exception {
         LOG.info("Received request ID [{}]", context.getAwsRequestId());
-        return null;
+        return weatherEvent;
     }
 
 }
