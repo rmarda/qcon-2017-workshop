@@ -1,4 +1,4 @@
-# Symphonia / OSCON Tutorial - Phase 4
+# Phase 4
 
 ## Serverless Components
 
@@ -29,7 +29,7 @@ Once the test passes, deploy your application stack:
 ```bash
 $ mvn install
 $ mvn assembly:single
-$ aws s3 cp target/oscon-2017-tutorial-phase4-1.0-SNAPSHOT.zip $S3_SOURCE/source.zip
+$ aws s3 cp target/source.zip $S3_SOURCE/source.zip
 ```
 
 Verify that the Code Pipeline deploy process has started: https://console.aws.amazon.com/codepipeline/home
@@ -41,7 +41,7 @@ Once the stack is deployed, we can send some test data to it using the `event-ge
 ```bash
 $ cd event-generator
 $ mvn clean package
-$ java -jar target/event-generator-1.0-SNAPSHOT.jar --limit 20 --stack oscon-2017-tutorial-application
+$ java -jar target/event-generator-1.0-SNAPSHOT.jar --limit 20 --stack serverless-weather
 API url: https://o30vnzv5ci.execute-api.us-west-2.amazonaws.com/prod/events
 request: {"timestamp":1494108607587,"locationId":"1978BE5B1CD1DFA1A247E8B3BD6827D2","locationName":"Montgomery, AL","latitude":32.361538,"longitude":-86.279118,"city":"Montgomery","state":"AL","temperature":85.5631845254945}
 response: 200 / 8e3510b9-1e34-586e-8c5c-413bf809c4c4

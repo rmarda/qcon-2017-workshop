@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.symphonia</groupId>
-    <artifactId>oscon-2017-tutorial-phase3</artifactId>
+    <artifactId>phase3-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -88,6 +88,7 @@
                         <descriptor>zip-assembly.xml</descriptor>
                     </descriptors>
                     <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+                    <finalName>source</finalName>
                 </configuration>
             </plugin>
         </plugins>

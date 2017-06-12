@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: OSCON 2017 Serverless Tutorial (Phase 3)
+Description: Serverless Weather Application (Phase 3)
 
 Resources:
 

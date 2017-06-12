@@ -1,4 +1,4 @@
-# Symphonia / OSCON Tutorial - Phase 1
+# Phase 1
 
 ## Serverless Components
 
@@ -20,7 +20,7 @@ Once the test passes, deploy your application stack:
 ```bash
 $ mvn install
 $ mvn assembly:single
-$ aws s3 cp target/oscon-2017-tutorial-phase1-1.0-SNAPSHOT.zip $S3_SOURCE/source.zip
+$ aws s3 cp target/source.zip $S3_SOURCE/source.zip
 ```
 
 Verify that the Code Pipeline deploy process has started: https://console.aws.amazon.com/codepipeline/home

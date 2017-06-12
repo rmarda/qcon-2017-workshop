@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: OSCON 2017 Serverless Tutorial Build Pipeline
+Description: Serverless Weather Application Build Pipeline
 
 Parameters:
   ApplicationStackName:
     Type: String
-    Default: oscon-2017-tutorial-application
+    Default: serverless-weather
     AllowedPattern: "[A-Za-z0-9-]+"
 
 Resources:
