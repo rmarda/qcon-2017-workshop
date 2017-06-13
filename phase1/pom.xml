@@ -17,16 +17,10 @@
 
     <modules>
         <module>events-ingest-lambda-phase1</module>
-        <module>shared-domain-phase1</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>io.symphonia</groupId>
-                <artifactId>shared-domain-phase1</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-lambda-java-core</artifactId>

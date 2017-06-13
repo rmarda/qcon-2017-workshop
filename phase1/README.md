@@ -4,7 +4,14 @@
 
 1. Lambda function (events-ingest-lambda)
 
-## Learn
+## Learning Objectives
+
+1. Write a basic Lambda in Java
+1. Use `lambda-logging` to include the Lambda Request ID in logging output.
+1. Demonstrate deserialization of JSON input into a Java POJO
+1. Demonstrate serialization of a Java POJO into JSON output
+
+## Do
 
 ### Fix the Lambda!
 

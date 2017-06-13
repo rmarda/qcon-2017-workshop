@@ -14,10 +14,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.symphonia</groupId>
-            <artifactId>shared-domain-phase1</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-core</artifactId>
             <scope>provided</scope>
