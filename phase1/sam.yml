@@ -11,4 +11,4 @@ Resources:
       Runtime: java8
       MemorySize: 256
       Timeout: 10
-      CodeUri: events-ingest-lambda-phase1/target/events-ingest-lambda-phase1-1.0-SNAPSHOT.jar
+      CodeUri: events-ingest-lambda-phase1/target/lambda.jar

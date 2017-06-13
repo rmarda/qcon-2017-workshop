@@ -58,6 +58,9 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <finalName>lambda</finalName>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
