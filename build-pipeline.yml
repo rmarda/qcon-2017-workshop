@@ -21,7 +21,9 @@ Resources:
           Type: LINUX_CONTAINER
           EnvironmentVariables:
           - Name: CFN_PACKAGE_S3_BUCKET
-            Value: !Ref CfnPackageS3Location
+            Value: !Ref CfnBucket
+          - Name: MAVEN_S3_BUCKET
+            Value: !Ref MavenBucket
         ServiceRole: !Ref CodeBuildRole
         Source:
           Type: CODEPIPELINE
@@ -31,7 +33,7 @@ Resources:
     Properties:
       ArtifactStore:
         Type: S3
-        Location: !Ref ArtifactStoreS3Location
+        Location: !Ref ArtifactBucket
       RestartExecutionOnUpdate: true
       RoleArn: !GetAtt CodePipelineRole.Arn
       Stages:
@@ -47,7 +49,7 @@ Resources:
           OutputArtifacts:
           - Name: MyApp
           Configuration:
-            S3Bucket: !Ref SourceS3Location
+            S3Bucket: !Ref SourceBucket
             S3ObjectKey: source.zip
           RunOrder: 1
       - Name: Build
@@ -97,19 +99,22 @@ Resources:
             StackName: !Ref ApplicationStackName
           RunOrder: 2
 
-  SourceS3Location:
+  SourceBucket:
     Type: AWS::S3::Bucket
     Properties:
       VersioningConfiguration:
         Status: Enabled
 
-  ArtifactStoreS3Location:
+  ArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
       VersioningConfiguration:
         Status: Enabled
 
-  CfnPackageS3Location:
+  CfnBucket:
+    Type: AWS::S3::Bucket
+
+  MavenBucket:
     Type: AWS::S3::Bucket
 
   CodeBuildRole:
@@ -152,9 +157,11 @@ Resources:
         - arn:aws:iam::aws:policy/AdministratorAccess #TODO: Reduce permissions
 
 Outputs:
-  SourceS3Bucket:
+  SourceBucket:
     Description: S3 bucket to upload your source.zip
+    Export:
+      Name: ServerlessWeatherSourceBucket
     Value: !Join
       - ''
       - - s3://
-        - !Ref SourceS3Location
+        - !Ref SourceBucket

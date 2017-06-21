@@ -1,0 +1,161 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Weather Application (Phase 6)
+
+Resources:
+
+  WeatherApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          title:
+            Ref: AWS::StackName
+        basePath: "/prod"
+        schemes:
+        - "https"
+        paths:
+          /events:
+            post:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              parameters:
+              - in: "body"
+                name: "EventBodyModel"
+                required: true
+                schema:
+                  $ref: "#/definitions/EventBodyModel"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-request-validator: "ValidateBody"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WeatherEventLambda.Arn}/invocations"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+          /locations:
+            get:
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WeatherQueryLambda.Arn}/invocations"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+        definitions:
+          Empty:
+            type: "object"
+            title: "Empty Schema"
+          EventBodyModel:
+            type: "object"
+            properties:
+              timestamp:
+                type: "integer"
+              locationName:
+                type: "string"
+              latitude:
+                type: "number"
+              longitude:
+                type: "number"
+              temperature:
+                type: "number"
+            required:
+            - timestamp
+            - locationName
+            - temperature
+        x-amazon-apigateway-request-validators:
+          ValidateBody:
+            validateRequestParameters: false
+            validateRequestBody: true
+
+  WeatherEventLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.WeatherEventLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 10
+      CodeUri: weather-event-lambda/target/lambda.jar
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${LocationsTable}'
+      Environment:
+        Variables:
+          LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref WeatherApi
+            Path: /events
+            Method: POST
+
+  WeatherQueryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: io.symphonia.WeatherQueryLambda::handler
+      Runtime: java8
+      MemorySize: 256
+      Timeout: 10
+      CodeUri: weather-query-lambda/target/lambda.jar
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:Scan
+          Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${LocationsTable}'
+      Environment:
+        Variables:
+          LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref WeatherApi
+            Path: /locations
+            Method: GET
+
+  LocationsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: locationName
+        Type: String
+
+Outputs:
+  WeatherApiUrl:
+    Description: URL of your API endpoint
+    Export:
+      Name: WeatherApiUrl
+    Value: !Join
+      - ''
+      - - https://
+        - !Ref WeatherApi
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com/prod'

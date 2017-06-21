@@ -4,7 +4,7 @@ Description: Serverless Weather Application (Phase 5)
 
 Resources:
 
-  Api:
+  WeatherApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
@@ -40,25 +40,7 @@ Resources:
                   default:
                     statusCode: "200"
                 uri:
-                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EventsIngestLambda.Arn}/invocations"
-                httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
-                type: "aws_proxy"
-          /locations:
-            get:
-              produces:
-              - "application/json"
-              responses:
-                "200":
-                  description: "200 response"
-                  schema:
-                    $ref: "#/definitions/Empty"
-              x-amazon-apigateway-integration:
-                responses:
-                  default:
-                    statusCode: "200"
-                uri:
-                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LocationsQueryLambda.Arn}/invocations"
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WeatherEventLambda.Arn}/invocations"
                 httpMethod: "POST"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
@@ -71,39 +53,38 @@ Resources:
             properties:
               timestamp:
                 type: "integer"
-              locationId:
-                type: "string"
               locationName:
                 type: "string"
               latitude:
                 type: "number"
               longitude:
                 type: "number"
-              city:
-                type: "string"
-              state:
-                type: "string"
               temperature:
                 type: "number"
             required:
             - timestamp
-            - location_id
+            - locationName
             - temperature
         x-amazon-apigateway-request-validators:
           ValidateBody:
             validateRequestParameters: false
             validateRequestBody: true
 
-  EventsIngestLambda:
+  WeatherEventLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: io.symphonia.EventsIngestLambda::handler
+      Handler: io.symphonia.WeatherEventLambda::handler
       Runtime: java8
       MemorySize: 256
       Timeout: 10
-      CodeUri: events-ingest-lambda-phase5/target/events-ingest-lambda-phase5-1.0-SNAPSHOT.jar
+      CodeUri: weather-event-lambda/target/lambda.jar
       Policies:
-        - AmazonDynamoDBFullAccess
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${LocationsTable}'
       Environment:
         Variables:
           LOCATIONS_TABLE: !Ref LocationsTable
@@ -111,45 +92,45 @@ Resources:
         ApiEvents:
           Type: Api
           Properties:
-            RestApiId: !Ref Api
+            RestApiId: !Ref WeatherApi
             Path: /events
             Method: POST
 
-  LocationsQueryLambda:
+  WeatherQueryLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: io.symphonia.LocationsQueryLambda::handler
+      Handler: io.symphonia.WeatherQueryLambda::handler
       Runtime: java8
       MemorySize: 256
-      Timeout: 300
-      CodeUri: locations-query-lambda-phase5/target/locations-query-lambda-phase5-1.0-SNAPSHOT.jar
+      Timeout: 10
+      CodeUri: weather-query-lambda/target/lambda.jar
       Policies:
-        - AmazonDynamoDBFullAccess
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:ScanTable
+          Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${LocationsTable}'
       Environment:
         Variables:
           LOCATIONS_TABLE: !Ref LocationsTable
-      Events:
-        QueryLocation:
-          Type: Api
-          Properties:
-            RestApiId: !Ref Api
-            Path: /locations
-            Method: GET
 
   LocationsTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
-        Name: locationId
+        Name: locationName
         Type: String
 
 Outputs:
-  ApiUrl:
+  WeatherApiUrl:
     Description: URL of your API endpoint
+    Export:
+      Name: WeatherApiUrl
     Value: !Join
       - ''
       - - https://
-        - !Ref Api
+        - !Ref WeatherApi
         - '.execute-api.'
         - !Ref 'AWS::Region'
         - '.amazonaws.com/prod'

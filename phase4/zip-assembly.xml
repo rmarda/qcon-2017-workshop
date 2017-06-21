@@ -28,6 +28,9 @@
                 <include>buildspec.yml</include>
                 <include>sam.yml</include>
                 <include>zip-assembly.xml</include>
+                <include>pre-install.sh</include>
+                <include>post-install.sh</include>
+                <include>src/</include>
             </includes>
         </fileSet>
     </fileSets>
