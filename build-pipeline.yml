@@ -22,8 +22,6 @@ Resources:
           EnvironmentVariables:
           - Name: CFN_PACKAGE_S3_BUCKET
             Value: !Ref CfnBucket
-          - Name: MAVEN_S3_BUCKET
-            Value: !Ref MavenBucket
         ServiceRole: !Ref CodeBuildRole
         Source:
           Type: CODEPIPELINE
@@ -112,9 +110,6 @@ Resources:
         Status: Enabled
 
   CfnBucket:
-    Type: AWS::S3::Bucket
-
-  MavenBucket:
     Type: AWS::S3::Bucket
 
   CodeBuildRole:
