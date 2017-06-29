@@ -1,5 +1,12 @@
 # Phase 1
 
+## Goals
+
+1. Write and build a basic synchronous Lambda, using Java and Maven
+1. Deploy and invoke the Lambda using the AWS web console
+1. Deploy and invoke the Lambda using the AWS CLI
+1. View Cloudwatch Metrics and Logs
+
 ## Steps
 
 1. Build the basic synchronous Lambda, in Java
