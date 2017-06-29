@@ -51,7 +51,7 @@ public class WeatherEventLambda {
     public static class WeatherEvent {
         public String locationName;
         public Double temperature;
-        public Integer timestamp;
+        public Long timestamp;
     }
 
     public static class ApiGatewayProxyRequest {

@@ -25,6 +25,7 @@ public class WeatherEventLambda {
 
     public static class WeatherEvent {
         public String locationName;
+        public Double temperature;
     }
 
     public static class ApiGatewayProxyRequest {
@@ -36,7 +37,7 @@ public class WeatherEventLambda {
 
         // TODO:
         // Finish this POJO class that represents an API Gateway proxy response.
-        // Required fields an integer 'statusCode', and a string 'body'.
+        // Required fields are an integer 'statusCode', and a string 'body'.
 
         // ROT13 solution:
         /*
