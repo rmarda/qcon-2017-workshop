@@ -50,7 +50,7 @@ public class WeatherQueryLambda {
     public static class WeatherEvent {
         public String locationName;
         public Double temperature;
-        public Integer timestamp;
+        public Long timestamp;
         public Double longitude;
         public Double latitude;
     }

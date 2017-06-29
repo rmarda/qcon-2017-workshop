@@ -11,9 +11,10 @@
 1. Create a zip file containing the source code:
     ```bash
     $ mvn clean assembly:single
-    $ l$ ls target/source.zip
+    $ ls target/source.zip
     target/source.zip
     ```
+
 1. Find the S3 bucket associated with the build pipeline:
     ```bash
     $ BUILD_S3=$(aws cloudformation list-exports --query 'Exports[?Name==`ServerlessWeatherSourceBucket`].Value' --output text)
@@ -37,3 +38,5 @@
     $ cat out && echo
     {"locationName":"New York, NY","temperature":75.0}
     ```
+
+1. View the latest Cloudwatch Logs for evidence of the JSON deserialization.

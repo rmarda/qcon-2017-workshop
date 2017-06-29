@@ -77,22 +77,6 @@ the application stack name is specified as a parameter to the stack template.
     }
     ```
 
-1. Get the S3 url where you'll upload code during the tutorial. Use your build pipeline stack name if it's different from this:
-    ```bash
-    $ aws cloudformation list-exports \
-            --region us-west-2 \
-            --query 'Exports[?Name==`ServerlessWeatherSourceBucket`].Value' \
-            --output text
-    ```
-    The output should look something like this:
-    ```
-    s3://serverless-weather-build-sourcebucket-1nv03dhrux8yr
-    ```
-    It may be helpful to save this information in an environment variable (we'll use it later):
-    ```bash
-    export S3_SOURCE=YOUR_S3_BUCKET
-    ```
-
 ## Tutorial
 
 Look at the `README.md` file in the `phase1` directory to get started.
