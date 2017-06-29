@@ -17,6 +17,8 @@
 1. Find the S3 bucket associated with the build pipeline:
     ```bash
     $ BUILD_S3=$(aws cloudformation list-exports --query 'Exports[?Name==`ServerlessWeatherSourceBucket`].Value' --output text)
+    $ echo $BUILD_S3
+    s3://serverless-weather-build-sourcebucket-9ffxyj7aujts
     ```
 
 1. Upload the zip file to the S3 bucket:
@@ -26,10 +28,12 @@
 
 1. Observe the build pipeline deploy the Lambda function
 
+1. Get the Lambda name from the AWS web console (or via the CLI).
+
 1. Invoke the Lambda using the AWS CLI:
     ```bash
-    $ aws lambda invoke --function-name WeatherEventLambda \
+    $ aws lambda invoke --function-name <LAMBDA NAME> \
           --payload '{"locationName": "New York, NY", "temperature": 75.0}' out
     $ cat out && echo
-    {"locationName": "New York, NY", "temperature": 75.0}
+    {"locationName":"New York, NY","temperature":75.0}
     ```
