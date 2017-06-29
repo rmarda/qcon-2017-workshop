@@ -1,8 +1,8 @@
 # Phase 1
 
-## Goals
+## Steps
 
-1. Write a basic synchronous Lambda, in Java
+1. Build the basic synchronous Lambda, in Java
     ```bash
     $ mvn clean package
     ```
@@ -26,7 +26,9 @@
     ```
 1. Invoke the Lambda using the AWS command line interface
     ```bash
-    $ aws lambda invoke --function-name HelloWorldLambda --payload '"Hello, world!"' out
+    $ aws lambda invoke --function-name HelloWorldLambda --payload '"world"' out
     $ cat out && echo
     "Hello, world!"
     ```
+1. View Cloudwatch Metrics
+1. View Cloudwatch Logs output
