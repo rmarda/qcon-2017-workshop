@@ -3,20 +3,17 @@ package io.symphonia.domain;
 public class WeatherEvent {
 
     private Long timestamp;
-    private String locationId;
     private String locationName;
     private Double latitude;
     private Double longitude;
-    private String city;
-    private String state;
     private Double temperature;
 
     public WeatherEvent() {
     }
 
-    public WeatherEvent(Long timestamp, String locationId, Double temperature) {
+    public WeatherEvent(Long timestamp, String locationName, Double temperature) {
         this.timestamp = timestamp;
-        this.locationId = locationId;
+        this.locationName = locationName;
         this.temperature = temperature;
     }
 
@@ -26,14 +23,6 @@ public class WeatherEvent {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
     }
 
     public String getLocationName() {
@@ -58,22 +47,6 @@ public class WeatherEvent {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public Double getTemperature() {

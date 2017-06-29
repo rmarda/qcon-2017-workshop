@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ApiUrlFinder {
 
-    private static String OUTPUT_KEY = "ApiUrl";
+    private static String OUTPUT_KEY = "WeatherApiUrl";
 
     private final AmazonCloudFormation cfnClient = AmazonCloudFormationClientBuilder.defaultClient();
 

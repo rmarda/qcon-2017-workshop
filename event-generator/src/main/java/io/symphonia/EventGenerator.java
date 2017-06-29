@@ -31,32 +31,23 @@ import java.util.stream.StreamSupport;
 
 public class EventGenerator implements Supplier<WeatherEvent> {
 
-    private final MessageDigest messageDigest;
     private final Random random;
     private final String[] location;
 
     public EventGenerator(String[] location) {
         this.random = new Random();
         this.location = location;
-        try {
-            this.messageDigest = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public WeatherEvent get() {
         String locationName = String.format("%s, %s", location[0], location[1]);
-        String md5 = DatatypeConverter.printHexBinary(messageDigest.digest(locationName.getBytes()));
 
         // Generate temperature based on latitude
         Double latitude = Double.parseDouble(location[2]);
         Double temperature = ((1 - (Math.abs(latitude) / 90.0)) * 140) + (random.nextDouble() * 10) - 5;
 
-        WeatherEvent weatherEvent = new WeatherEvent(System.currentTimeMillis(), md5, temperature);
-        weatherEvent.setCity(location[0]);
-        weatherEvent.setState(location[1]);
+        WeatherEvent weatherEvent = new WeatherEvent(System.currentTimeMillis(), locationName, temperature);
         weatherEvent.setLatitude(latitude);
         weatherEvent.setLongitude(Double.parseDouble(location[3]));
         weatherEvent.setLocationName(locationName);
@@ -102,7 +93,7 @@ public class EventGenerator implements Supplier<WeatherEvent> {
                 .map(EventGenerator::get)
                 .map(event -> {
                     if (args.invalid) {
-                        event.setLocationId(null);
+                        event.setLocationName(null);
                     }
                     return event;
                 })

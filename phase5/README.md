@@ -3,4 +3,5 @@
 ## Goals
 
 1. Use Maven sub-modules to build multiple Lambdas in a single Maven project
+1. Use the AWS SDK Bill of Materials (BOM) in the Maven parent
 1. Query DynamoDB from a Lambda

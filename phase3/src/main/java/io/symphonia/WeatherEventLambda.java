@@ -9,29 +9,47 @@ public class WeatherEventLambda {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
-        WeatherEvent weatherEvent = objectMapper.readValue(request.body, WeatherEvent.class);
-        return new ApiGatewayProxyResponse();
+
+        // TODO
+        // 1. Deserialize the body of the incoming request into a WeatherEvent object
+        // 2. Return a JSON response with a status code of 200, and a response body of the locationName.
+
+        // ROT13 solution:
+        /*
+        JrngureRirag jrngureRirag = bowrpgZnccre.ernqInyhr(erdhrfg.obql, JrngureRirag.pynff);
+        erghea arj NcvTngrjnlCebklErfcbafr(200, jrngureRirag.ybpngvbaAnzr);
+         */
+
+        return null;
     }
 
     public static class WeatherEvent {
-        public String location;
-        public Double temperature;
+        public String locationName;
     }
 
     public static class ApiGatewayProxyRequest {
         public String body;
     }
 
+
     public static class ApiGatewayProxyResponse {
-        public Integer statusCode;
-        public String body;
 
-        public ApiGatewayProxyResponse() {
+        // TODO:
+        // Finish this POJO class that represents an API Gateway proxy response.
+        // Required fields an integer 'statusCode', and a string 'body'.
+
+        // ROT13 solution:
+        /*
+        choyvp Vagrtre fgnghfPbqr;
+        choyvp Fgevat obql;
+
+        choyvp NcvTngrjnlCebklErfcbafr() {
         }
 
-        public ApiGatewayProxyResponse(Integer statusCode, String body) {
-            this.statusCode = statusCode;
-            this.body = body;
+        choyvp NcvTngrjnlCebklErfcbafr(Vagrtre fgnghfPbqr, Fgevat obql) {
+            guvf.fgnghfPbqr = fgnghfPbqr;
+            guvf.obql = obql;
         }
+         */
     }
 }
