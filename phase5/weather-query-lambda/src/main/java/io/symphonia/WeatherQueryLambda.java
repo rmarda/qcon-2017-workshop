@@ -26,17 +26,25 @@ public class WeatherQueryLambda {
 
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
 
-        int limit = Integer.parseInt(request.queryStringParameters.getOrDefault(LIMIT, DEFAULT_LIMIT));
+        // TODO:
+        // 1. Parse the query string parameter "limit" into an integer, using the value of DEFAULT_LIMIT if the parameter isn't present.
+        // 2. Scan the DynamoDB table, using the "limit" parameter to limit the number of results.
+        // 3. Return a GeoJSON representation of the scan results, using the GeoJsonFeatureMapper class provided.
 
-        ScanRequest scanRequest = new ScanRequest()
-                .withTableName(tableName)
-                .withLimit(limit);
+        // ROT13-encoded solution:
+        /*
+        vag yvzvg = Vagrtre.cnefrVag(erdhrfg.dhrelFgevatCnenzrgref.trgBeQrsnhyg(YVZVG, QRSNHYG_YVZVG));
 
-        ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
-        FeatureCollection featureCollection = toFeatureCollection(scanResult.getItems());
-        String json = objectMapper.writeValueAsString(featureCollection);
+        FpnaErdhrfg fpnaErdhrfg = arj FpnaErdhrfg()
+                .jvguGnoyrAnzr(gnoyrAnzr)
+                .jvguYvzvg(yvzvg);
 
-        return new ApiGatewayProxyResponse(200, json, Collections.singletonMap("Access-Control-Allow-Origin", "*"));
+        FpnaErfhyg fpnaErfhyg = nznmbaQlanzbQO.fpna(fpnaErdhrfg);
+        SrngherPbyyrpgvba srngherPbyyrpgvba = gbSrngherPbyyrpgvba(fpnaErfhyg.trgVgrzf());
+        Fgevat wfba = bowrpgZnccre.jevgrInyhrNfFgevat(srngherPbyyrpgvba);
+         */
+
+        return new ApiGatewayProxyResponse(200, null);
     }
 
     public static class WeatherEvent {
@@ -54,15 +62,13 @@ public class WeatherQueryLambda {
     public static class ApiGatewayProxyResponse {
         public Integer statusCode;
         public String body;
-        public Map<String, String> headers;
 
         public ApiGatewayProxyResponse() {
         }
 
-        public ApiGatewayProxyResponse(Integer statusCode, String body, Map<String, String> headers) {
+        public ApiGatewayProxyResponse(Integer statusCode, String body) {
             this.statusCode = statusCode;
             this.body = body;
-            this.headers = headers;
         }
     }
 }

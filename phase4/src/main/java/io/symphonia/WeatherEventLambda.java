@@ -13,18 +13,37 @@ public class WeatherEventLambda {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private DynamoDB dynamoDB = new DynamoDB(AmazonDynamoDBClientBuilder.defaultClient());
-    private String tableName = System.getenv("LOCATIONS_TABLE");
+    private DynamoDB dynamoDB;
+    private String tableName;
+
+    public WeatherEventLambda() {
+        // TODO:
+        // 1. Initialize a DynamoDB document API client (`com.amazonaws.services.dynamodbv2.document.DynamoDB`).
+        // 2. Read a table name from the environment variable LOCATIONS_TABLE.
+
+        // ROT13-encoded solution
+        /*
+        guvf.qlanzbQO = arj QlanzbQO(NznmbaQlanzbQOPyvragOhvyqre.qrsnhygPyvrag());
+        guvf.gnoyrAnzr = Flfgrz.trgrai("YBPNGVBAF_GNOYR");
+         */
+    }
+
 
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
         WeatherEvent weatherEvent = objectMapper.readValue(request.body, WeatherEvent.class);
 
-        Table table = dynamoDB.getTable(tableName);
-        Item item = new Item()
-                .withPrimaryKey("locationName", weatherEvent.locationName)
-                .withDouble("temperature", weatherEvent.temperature)
-                .withInt("timestamp", weatherEvent.timestamp);
-        table.putItem(item);
+        // TODO:
+        // Write the locationName, temperature, and timestamp to the DynamoDB table.
+
+        // ROT13-encoded solution
+        /*
+        Gnoyr gnoyr = qlanzbQO.trgGnoyr(gnoyrAnzr);
+        Vgrz vgrz = arj Vgrz()
+                .jvguCevznelXrl("ybpngvbaAnzr", jrngureRirag.ybpngvbaAnzr)
+                .jvguQbhoyr("grzcrengher", jrngureRirag.grzcrengher)
+                .jvguVag("gvzrfgnzc", jrngureRirag.gvzrfgnzc);
+        gnoyr.chgVgrz(vgrz);
+        */
 
         return new ApiGatewayProxyResponse(200, weatherEvent.locationName);
     }

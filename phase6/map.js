@@ -1,4 +1,4 @@
-// FIXME: Replace with real URL
+// TODO: Replace with real URL
 var apiUrl = 'https://uggcmz3tki.execute-api.us-west-2.amazonaws.com/prod/locations';
 
 // Center on United States

@@ -44,6 +44,24 @@ Resources:
                 httpMethod: "POST"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws_proxy"
+          /locations:
+            get:
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                uri:
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WeatherQueryLambda.Arn}/invocations"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
         definitions:
           Empty:
             type: "object"
@@ -114,6 +132,13 @@ Resources:
       Environment:
         Variables:
           LOCATIONS_TABLE: !Ref LocationsTable
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref WeatherApi
+            Path: /locations
+            Method: GET
 
   LocationsTable:
     Type: AWS::Serverless::SimpleTable
