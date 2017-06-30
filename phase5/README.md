@@ -24,15 +24,15 @@
 
 ### TODO E
 
-    ```java
-    String limitParam = request.queryStringParameters == null ? DEFAULT_LIMIT : request.queryStringParameters.getOrDefault(LIMIT, DEFAULT_LIMIT);
-    int limit = Integer.parseInt(limitParam);
+```java
+String limitParam = request.queryStringParameters == null ? DEFAULT_LIMIT : request.queryStringParameters.getOrDefault(LIMIT, DEFAULT_LIMIT);
+int limit = Integer.parseInt(limitParam);
 
-    ScanRequest scanRequest = new ScanRequest()
-            .withTableName(tableName)
-            .withLimit(limit);
+ScanRequest scanRequest = new ScanRequest()
+        .withTableName(tableName)
+        .withLimit(limit);
 
-    ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
-    FeatureCollection featureCollection = toFeatureCollection(scanResult.getItems());
-    String json = objectMapper.writeValueAsString(featureCollection);
-    ```
+ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
+FeatureCollection featureCollection = toFeatureCollection(scanResult.getItems());
+String json = objectMapper.writeValueAsString(featureCollection);
+```
