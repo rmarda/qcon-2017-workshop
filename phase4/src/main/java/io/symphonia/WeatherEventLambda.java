@@ -21,12 +21,6 @@ public class WeatherEventLambda {
         // TODO C:
         // 1. Initialize a DynamoDB document API client (`com.amazonaws.services.dynamodbv2.document.DynamoDB`).
         // 2. Read a table name from the environment variable LOCATIONS_TABLE.
-
-        // ROT13-encoded solution
-        /*
-        guvf.qlanzbQO = arj QlanzbQO(NznmbaQlanzbQOPyvragOhvyqre.qrsnhygPyvrag());
-        guvf.gnoyrAnzr = Flfgrz.trgrai("YBPNGVBAF_GNOYR");
-         */
     }
 
 
