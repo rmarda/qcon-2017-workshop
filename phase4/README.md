@@ -28,3 +28,16 @@
     ```
 
 1. Observe that the events were persisted to DynamoDB.
+
+## Solutions
+
+### TODO C
+
+    ```java
+    Table table = dynamoDB.getTable(tableName);
+    Item item = new Item()
+            .withPrimaryKey("locationName", weatherEvent.locationName)
+            .withDouble("temperature", weatherEvent.temperature)
+            .withInt("timestamp", weatherEvent.timestamp);
+    table.putItem(item);
+    ```

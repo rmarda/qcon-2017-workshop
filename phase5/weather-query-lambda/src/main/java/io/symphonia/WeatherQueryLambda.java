@@ -26,23 +26,10 @@ public class WeatherQueryLambda {
 
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
 
-        // TODO:
+        // TODO D:
         // 1. Parse the query string parameter "limit" into an integer, using the value of DEFAULT_LIMIT if the parameter isn't present.
         // 2. Scan the DynamoDB table, using the "limit" parameter to limit the number of results.
         // 3. Return a GeoJSON representation of the scan results, using the GeoJsonFeatureMapper class provided.
-
-        // ROT13-encoded solution:
-        /*
-        vag yvzvg = Vagrtre.cnefrVag(erdhrfg.dhrelFgevatCnenzrgref.trgBeQrsnhyg(YVZVG, QRSNHYG_YVZVG));
-
-        FpnaErdhrfg fpnaErdhrfg = arj FpnaErdhrfg()
-                .jvguGnoyrAnzr(gnoyrAnzr)
-                .jvguYvzvg(yvzvg);
-
-        FpnaErfhyg fpnaErfhyg = nznmbaQlanzbQO.fpna(fpnaErdhrfg);
-        SrngherPbyyrpgvba srngherPbyyrpgvba = gbSrngherPbyyrpgvba(fpnaErfhyg.trgVgrzf());
-        Fgevat wfba = bowrpgZnccre.jevgrInyhrNfFgevat(srngherPbyyrpgvba);
-         */
 
         return new ApiGatewayProxyResponse(200, null);
     }

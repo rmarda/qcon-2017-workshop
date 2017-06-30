@@ -13,7 +13,10 @@
     ```bash
     $ mvn clean package
     ```
-1. Create and deploy the Lambda using the AWS web console
+1. Create and deploy the Lambda using the AWS web console:
+
+    https://console.aws.amazon.com/lambda
+
 1. Invoke the Lambda using the AWS web console
 1. Delete the Lambda using the AWS command line interface
     ```bash

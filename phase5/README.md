@@ -19,3 +19,19 @@
     ```
 
 1. Use a browser to send a GET request to the new /locations endpoint.
+
+## Solutions
+
+### TODO D
+
+    ```java
+    int limit = Integer.parseInt(request.queryStringParameters.getOrDefault(LIMIT, DEFAULT_LIMIT));
+
+    ScanRequest scanRequest = new ScanRequest()
+            .withTableName(tableName)
+            .withLimit(limit);
+
+    ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
+    FeatureCollection featureCollection = toFeatureCollection(scanResult.getItems());
+    String json = objectMapper.writeValueAsString(featureCollection);
+    ```

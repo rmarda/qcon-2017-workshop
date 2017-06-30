@@ -2,11 +2,11 @@
 
 ## Chat room
 
-Join this public Hipchat room to discuss and share information with your fellow attendees: https://www.hipchat.com/TODO
+Join this public Hipchat room to discuss and share information with your fellow attendees: https://www.hipchat.com/gLOf5k7xF
 
 ## Resources
 
-After the tutorial, you can find links and resources here: https://bit.ly/TODO
+After the tutorial, you can find links and resources here: https://bit.ly/symph-qcon-workshop
 
 ## Initial Setup
 

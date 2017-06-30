@@ -32,18 +32,8 @@ public class WeatherEventLambda {
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
         WeatherEvent weatherEvent = objectMapper.readValue(request.body, WeatherEvent.class);
 
-        // TODO:
-        // Write the locationName, temperature, and timestamp to the DynamoDB table.
-
-        // ROT13-encoded solution
-        /*
-        Gnoyr gnoyr = qlanzbQO.trgGnoyr(gnoyrAnzr);
-        Vgrz vgrz = arj Vgrz()
-                .jvguCevznelXrl("ybpngvbaAnzr", jrngureRirag.ybpngvbaAnzr)
-                .jvguQbhoyr("grzcrengher", jrngureRirag.grzcrengher)
-                .jvguVag("gvzrfgnzc", jrngureRirag.gvzrfgnzc);
-        gnoyr.chgVgrz(vgrz);
-        */
+        // TODO C:
+        // 1. Write the locationName, temperature, and timestamp to the DynamoDB table.
 
         return new ApiGatewayProxyResponse(200, weatherEvent.locationName);
     }

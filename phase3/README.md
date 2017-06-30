@@ -39,3 +39,27 @@
     ```bash
     $ java -jar target/event-generator-1.0-SNAPSHOT.jar --limit 1 --stack serverless-weather --invalid
     ```
+
+## Solutions
+
+### TODO A
+
+    ```java
+    WeatherEvent weatherEvent = objectMapper.readValue(request.body, WeatherEvent.class);
+    return new ApiGatewayProxyResponse(200, weatherEvent.locationName);
+    ```
+
+### TODO B
+
+    ```java
+    public Integer statusCode;
+    public String body;
+
+    public ApiGatewayProxyResponse() {
+    }
+
+    public ApiGatewayProxyResponse(Integer statusCode, String body) {
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+    ```
