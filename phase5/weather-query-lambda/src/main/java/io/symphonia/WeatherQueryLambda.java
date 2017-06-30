@@ -26,7 +26,7 @@ public class WeatherQueryLambda {
 
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
 
-        // TODO D:
+        // TODO E:
         // 1. Parse the query string parameter "limit" into an integer, using the value of DEFAULT_LIMIT if the parameter isn't present.
         // 2. Scan the DynamoDB table, using the "limit" parameter to limit the number of results.
         // 3. Return a GeoJSON representation of the scan results, using the GeoJsonFeatureMapper class provided.

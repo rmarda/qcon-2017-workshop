@@ -18,7 +18,7 @@ public class WeatherEventLambda {
     private String tableName;
 
     public WeatherEventLambda() {
-        // TODO:
+        // TODO C:
         // 1. Initialize a DynamoDB document API client (`com.amazonaws.services.dynamodbv2.document.DynamoDB`).
         // 2. Read a table name from the environment variable LOCATIONS_TABLE.
 
@@ -33,7 +33,7 @@ public class WeatherEventLambda {
     public ApiGatewayProxyResponse handler(ApiGatewayProxyRequest request) throws IOException {
         WeatherEvent weatherEvent = objectMapper.readValue(request.body, WeatherEvent.class);
 
-        // TODO C:
+        // TODO D:
         // 1. Write the locationName, temperature, and timestamp to the DynamoDB table.
 
         return new ApiGatewayProxyResponse(200, weatherEvent.locationName);

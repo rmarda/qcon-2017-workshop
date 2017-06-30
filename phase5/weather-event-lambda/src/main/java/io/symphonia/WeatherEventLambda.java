@@ -23,7 +23,7 @@ public class WeatherEventLambda {
         Item item = new Item()
                 .withPrimaryKey("locationName", weatherEvent.locationName)
                 .withDouble("temperature", weatherEvent.temperature)
-                .withInt("timestamp", weatherEvent.timestamp)
+                .withLong("timestamp", weatherEvent.timestamp)
                 .withDouble("longitude", weatherEvent.longitude)
                 .withDouble("latitude", weatherEvent.latitude);
         table.putItem(item);
@@ -34,7 +34,7 @@ public class WeatherEventLambda {
     public static class WeatherEvent {
         public String locationName;
         public Double temperature;
-        public Integer timestamp;
+        public Long timestamp;
         public Double longitude;
         public Double latitude;
     }

@@ -34,10 +34,19 @@
 ### TODO C
 
     ```java
+    this.dynamoDB = new DynamoDB(AmazonDynamoDBClientBuilder.defaultClient());
+    this.tableName = System.getenv("LOCATIONS_TABLE");
+    ```
+
+### TODO D
+
+    ```java
     Table table = dynamoDB.getTable(tableName);
     Item item = new Item()
             .withPrimaryKey("locationName", weatherEvent.locationName)
             .withDouble("temperature", weatherEvent.temperature)
-            .withInt("timestamp", weatherEvent.timestamp);
+            .withLong("timestamp", weatherEvent.timestamp)
+            .withDouble("longitude", weatherEvent.longitude)
+            .withDouble("latitude", weatherEvent.latitude);
     table.putItem(item);
     ```
