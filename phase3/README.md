@@ -16,7 +16,7 @@
     ```bash
     $ mvn clean package
     $ mvn assembly:single
-    $ aws s3 cp target/source.zip $BUILD_S3/source.zip
+    $ aws s3 cp target/source.zip $BUILD_S3
     ```
 
 1. Send some data!
