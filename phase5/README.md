@@ -25,7 +25,8 @@
 ### TODO E
 
     ```java
-    int limit = Integer.parseInt(request.queryStringParameters.getOrDefault(LIMIT, DEFAULT_LIMIT));
+    String limitParam = request.queryStringParameters == null ? DEFAULT_LIMIT : request.queryStringParameters.getOrDefault(LIMIT, DEFAULT_LIMIT);
+    int limit = Integer.parseInt(limitParam);
 
     ScanRequest scanRequest = new ScanRequest()
             .withTableName(tableName)
